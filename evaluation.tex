@@ -1,0 +1,142 @@
+\input{fig_successes}
+
+\chapter{Evaluation \todomatthew{haven't touched yet}}\label{empirical_evaluation}
+
+The goal of (dynamic) texture synthesis is to generate 
+samples that are indistinguishable from the real input target
+texture by a human observer.
+In this section, we present a variety of synthesis results
+including a user study to quantitatively evaluate the realism
+of our results.
+Given their temporal nature, our results are best viewed as 
+videos.
+Our two-stream architecture was implemented using TensorFlow
+\cite{tabadi2015tensorflowlong}.
+Results were generated using an NVIDIA Titan X (Pascal) GPU
+and synthesis times ranged between one to three hours 
+to generate $12$ frames with an image resolution of 
+$256 \times 256$.
+For our full synthesis results and source code, please refer to the
+supplemental material on the project website: \url{ryersonvisionlab.github.io/two-stream-projpage}.
+
+\section{Dynamic texture synthesis}\label{eval_dynamictexturesynthesis}
+
+We applied our dynamic texture synthesis process 
+to a wide range of textures which were selected from the 
+DynTex \cite{peteri2010} database and others we collected in
+the wild.
+Included in our supplemental material are synthesized results
+of nearly 60 different textures that encapsulate a range of
+phenomena, such as flowing water, waves, clouds, fire, rippling
+flags, waving plants, and schools of fish.
+Some sample frames are shown in Fig.\ \ref{fig:successes}
+but we encourage readers to view the videos to fully appreciate
+the results.
+In addition, we performed a comparison with \cite{funke2017} and 
+\cite{xie2017synthesizing}.
+Generally, we found our results to be qualitatively comparable or better than
+these methods.
+See the supplemental for more details on the comparisons with these methods.
+
+We also generated dynamic textures incrementally, as described in
+Sec.\ \ref{sec:texgen}.
+The resulting textures were perceptually indistinguishable from those
+generated with the batch process.
+Another extension that we explored were textures with no 
+discernible temporal seam between the last and first frames.
+Played as a loop, these textures appear to be temporally endless.
+This was achieved by assuming that the first frame follows the
+final frame and adding an additional loss for the dynamics 
+stream evaluated on that pair of frames.
+
+Example failure modes of our method are presented in Fig.\ 
+\ref{fig:failures}.
+In general, we find that most failures result from inputs that
+violate the underlying assumption of a dynamic texture, \ie, 
+the appearance and/or dynamics are not spatiotemporally homogeneous.
+In the case of the \texttt{escalator} example, the long edge 
+structures in the appearance are not spatially homogeneous, 
+and the dynamics vary due to perspective effects that
+change the motion from downward to outward.
+The resulting synthesized texture captures an overall downward 
+motion but lacks the perspective effects and is unable to 
+consistently reproduce the long edge structures.
+This is consistent with previous observations
+on static texture synthesis \cite{gatys2015} and suggests it is a 
+limitation of the appearance stream.
+
+Another example is the \texttt{flag} sequence where the rippling 
+dynamics are relatively homogeneous across the pattern but the 
+appearance  varies spatially.
+As expected, the generated texture does not faithfully
+reproduce the appearance; however, it does exhibit plausible 
+rippling dynamics.
+In the supplemental material, we include an additional failure 
+case, \texttt{cranberries}, which consists of a swirling pattern.
+Our model faithfully reproduces the appearance
+but is unable to capture the spatially varying dynamics.
+Interestingly, it still produces a result
+which is statistically indistinguishable from real in our user 
+study discussed below.
+
+\paragraph*{Appearance vs.\ dynamics streams}
+
+\input{fig_baselines}
+
+We sought to verify that the appearance and dynamics
+streams were capturing complementary information.
+To validate that the texture generation of multiple frames
+would not induce dynamics consistent with the input, we generated
+frames starting from randomly generated noise but only using the
+appearance statistics and corresponding loss, \ie,
+Eq.\ \ref{eq:apploss}.
+As expected, this produced frames that were valid textures but
+with no coherent dynamics present.
+Results for a sequence containing a school of fish are shown in
+Fig.\ \ref{fig:baselines}; to examine the dynamics, see 
+\texttt{fish} in the supplemental material.
+
+Similarly, to validate that the dynamics stream did not 
+inadvertently include appearance information, we generated videos
+using the dynamics loss only, \ie, Eq.\ \ref{eq:dynloss}.
+The resulting frames had no visible appearance and had
+an extremely low dynamic range, \ie, the standard
+deviation of pixel intensities was 10 for values in $[0,255]$.
+This indicates a general invariance to appearance and 
+suggests that our two-stream dynamic texture representation
+has factored appearance and dynamics, as desired.
+
+\input{fig_failures}
+
+\input{user_study}
+
+\section{Dynamics style transfer}
+
+The underlying assumption of our model is that appearance
+and dynamics of texture can be factorized.
+As such, it should allow for the transfer of the dynamics of
+one texture onto the appearance of another.
+This has been explored previously for artistic style transfer
+\cite{champandard2016,gatys2017} with static imagery.
+We accomplish this with our model by performing the same 
+optimization as above, but with the target Gram matrices for 
+appearance and dynamics computed from different textures.
+
+A dynamics style transfer result is shown in Fig.\ 
+\ref{fig:motiontransfer} (top), using two real videos.
+Additional examples are available in the supplemental material.
+We note that when performing dynamics style transfer it is important
+that the appearance structure be similar in scale and semantics,
+otherwise, the generated dynamic textures will look unnatural.
+For instance, transferring the dynamics of a flame onto a water 
+scene will generally produce implausible results.
+
+We can also apply the dynamics of a texture to a static input image,
+as the target Gram matrices for the appearance loss can be computed
+on just a single frame.
+This allows us to effectively animate regions of a static image.
+The result of this process can be striking and is visualized in
+Fig.\ \ref{fig:motiontransfer} (bottom), where the appearance is 
+taken from a painting and the dynamics from a real world video.
+
+\input{fig_motiontransfer}

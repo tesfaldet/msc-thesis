@@ -1,0 +1,81 @@
+\chapter{Related work \todomatthew{unfinished}}
+
+There are two general approaches that have dominated the texture
+synthesis literature: non-parametric sampling approaches that
+synthesize a texture by sampling pixels of a given source texture
+\cite{efros1999,kwatra2003graphcut,schodl2000,wei2000}, and 
+statistical parametric models.
+As the proposed approach is an instance of a parametric model, this thesis 
+will focus on these parametric approaches.
+
+The statistical characterization of visual textures was introduced
+in the seminal work of Julesz \cite{julesz1962}.
+He conjectured that particular statistics of pixel intensities
+were sufficient to partition spatial textures into metameric (\ie,
+perceptually indistinguishable) classes.
+Later work leveraged this notion for texture synthesis
+\cite{heeger1995pyramid,portilla2000parametric}.
+In particular, inspired by models of the early stages of visual 
+processing, statistics of (handcrafted) multi-scale oriented filter 
+responses were used to optimize an initial noise pattern 
+to match the filter response statistics of an input texture.
+More recently, Gatys \etal \cite{gatys2015} demonstrated
+impressive results by replacing the linear filter bank with a
+ConvNet that, in effect, served as a proxy for the ventral visual
+processing stream.
+Textures are modelled in terms of the correlations between filter 
+responses within several layers of the network.
+In subsequent work, this texture model was used in image style
+transfer \cite{gatys2016image}, where the style of one image was
+combined with the image content of another to produce a new image.
+Ruder \etal \cite{ruder2016} extended this model to video by using
+optical flow to enforce temporal consistency of the
+resulting imagery.
+
+Variants of linear autoregressive models have been studied
+\cite{szummer1996,doretto2003} that jointly model appearance and
+dynamics of the spatiotemporal pattern.
+More recent work has considered ConvNets as a basis for modelling 
+dynamic textures.
+Xie \etal \cite{xie2017synthesizing} proposed a spatiotemporal
+generative model where each dynamic texture is modelled as a random
+field defined by multiscale, spatiotemporal ConvNet filter responses
+and dynamic textures are realized by sampling the model.
+Unlike my current work, which assumes pretrained fixed networks,
+this approach requires the ConvNet weights to be trained using the
+input texture prior to synthesis.
+
+A recent preprint \cite{funke2017} described preliminary 
+results extending the framework of Gatys \etal \cite{gatys2015} 
+to model and  synthesize dynamic textures by computing a Gram 
+matrix of filter activations over a small temporal window.
+In contrast, the proposed two-stream filtering architecture is more 
+expressive as the dynamics stream is specifically tuned to 
+spatiotemporal dynamics.
+Moreover, the factorization
+in terms of appearance and dynamics enables a novel form of
+style transfer, where the dynamics of one pattern are 
+transferred to the appearance of another to generate an
+entirely new dynamic texture.
+This work is the first to demonstrate this form of style transfer.
+
+The recovery of optical flow from temporal imagery has long been
+studied in computer vision.
+Traditionally, it has been addressed by handcrafted approaches
+\eg, \cite{horn1981,lucas1981,revaud2015epicflow}.
+Recently, ConvNet approaches \cite{dosovitskiy2015,ranjan2017,ilg2017,yu2016}
+have been demonstrated as viable alternatives.
+Most closely related to my approach are energy models of visual
+motion \cite{adelson1985spatiotemporal,heeger1988,simoncelli1998,nishimoto2011,derpanis2012spacetime,konda2014}
+that have been motivated and studied in a variety of contexts,
+including computer vision, visual neuroscience, and visual
+psychology.
+Given an input image sequence, these models consist of an
+alternating sequence of linear and non-linear operations that yield
+a distributed representation (\ie,  implicitly coded) of pixelwise
+optical flow.
+Here, an energy model motivates the
+representation of observed dynamics which will then be encoded
+as a ConvNet. Significantly, a completely analytically-defined
+oriented energy ConvNet model provides the current state-of-the-art
+for the related task of dynamic texture recognition \cite{hadji2017}.

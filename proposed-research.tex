@@ -1,0 +1,42 @@
+\section{Proposed research}
+
+The proposed model will be constructed from two convolutional networks
+(ConvNets): an appearance stream and a dynamics stream,
+which have been pre-trained for object recognition
+and optical flow prediction, respectively.
+Similar to previous work on spatial textures
+\cite{gatys2015,heeger1995pyramid,portilla2000parametric}, I will
+summarize an input dynamic texture in terms of a set of
+spatiotemporal statistics of filter outputs from each stream.
+The appearance stream will model the per frame appearance of
+the input texture, while the dynamics stream will model its
+temporal dynamics.
+The synthesis process will consist of optimizing a randomly initialized noise pattern such that its spatiotemporal statistics from
+each stream will match those of the input texture.
+The architecture is inspired by insights from human perception and 
+neuroscience.
+In particular, psychophysical studies \cite{cutting1982} show that
+humans are able to perceive the structure of a dynamic texture even
+in the absence of appearance cues, suggesting that the two streams
+are effectively independent.
+Similarly, the two-stream hypothesis \cite{goodale1992} models the 
+human visual cortex in terms of two pathways, the ventral stream
+(involved with object recognition) and the
+dorsal stream (involved with motion processing). Two-stream networks have also been used for video understanding tasks in computer vision, with particular attention to action recognition \cite{simonyan2014,feichtenhofer2016two}.
+
+In this work, my two-stream analysis of
+dynamic textures will be applied to texture synthesis.
+I will consider a range of dynamic textures and show that 
+my approach generates novel, high quality samples that match
+both the frame-wise appearance and temporal evolution of an input
+example.
+Further, the factorization of appearance and dynamics shall enable a 
+novel form of style transfer, where dynamics of one texture are 
+combined with the appearance of a different one,
+\cf\ \cite{gatys2016image}.
+This can even be done using a single image as an appearance
+target, which allows static images to be animated.
+
+\subsection{Anticipated contributions}
+
+The potential contributions of the proposed research span both theory and application. First, I will provide theoretical insight into the characterization of dynamic textures by building a novel factored representation of both appearance and dynamics. Second, for the representation of dynamics, I construct a novel ConvNet trained for optical flow prediction. Third, I will show that the two-stream representation is effective in generating visually compelling, novel instances of a wide range of dynamic textures. Fourth, I will demonstrate a novel form of style transfer, where the dynamics of a dynamic texture can be mixed with the spatial appearance of a different (static or dynamic) texture. This will be enabled by the factored representation. Finally, I will evaluate the limitations of the method through the inclusion of a broad range of textures. This analysis will show which sequences work better than others and why. This may point to future work to address limitations of the proposed model. In terms of specific applications, there are many in the creative-industry including, but not limited to, computer-generated imagery, digital painting, and image editing. More broadly, the ability to animate static imagery via dynamics style transfer can meaningfully contribute to the emerging artistic medium of computer-generated art.

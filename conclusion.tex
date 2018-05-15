@@ -1,0 +1,34 @@
+\chapter{Conclusion \todomatthew{haven't touched yet}}
+In this paper, we presented a novel, two-stream model
+of dynamic textures using ConvNets to represent the appearance and
+dynamics.
+We applied this model to a variety of dynamic texture synthesis
+tasks and showed that, so long as the input textures are generally
+true dynamic textures, \ie, have spatially invariant statistics and
+spatiotemporally invariant dynamics, the resulting synthesized 
+textures are compelling.
+This was validated both qualitatively and quantitatively through
+a large user study.
+Further, we showed that the two-stream model enabled dynamics
+style transfer, where the appearance and dynamics 
+information from different sources can be combined to generate
+a novel texture.
+
+We have explored this model thoroughly and found a few limitations which we leave as directions for future work.
+First, much like has been reported in recent image style transfer
+work \cite{gatys2016image}, we have found that high frequency
+noise and chromatic aberrations are a problem in generation.
+Another issue that arises is the model fails to capture
+textures with spatially-variant appearance, (\eg, 
+\texttt{flag} in Fig.\ \ref{fig:failures}) and
+spatially-inconsistent dynamics (\eg, \texttt{escalator} in 
+Fig.\ \ref{fig:failures}).
+By collapsing the local statistics into a Gram matrix, 
+the spatial and temporal organization is lost.
+Simple post-processing methods may alleviate some of these issues
+but we believe that they also point to a need for a better
+representation.
+Beyond addressing these limitations, a natural next step would be
+to extend the idea of a factorized representation into feed-forward
+generative networks that have found success in static image
+synthesis, \eg, \cite{johnson2016,ulyanov2016}.

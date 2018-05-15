@@ -1,0 +1,91 @@
+\documentclass[12pt,english,a4paper]{report}
+
+\usepackage{thesis}
+\usepackage{geometry}
+%\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{setspace}
+\usepackage{etoolbox}
+\usepackage{tocbibind}
+\usepackage[normalem]{ulem}
+\usepackage{lipsum}
+
+% Include other packages here, before hyperref.
+\usepackage{subcaption}
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+\hypersetup{
+    linkcolor = {}
+}
+
+\newcommand{\figsz}{0.47in}
+\newcolumntype{V}{>{\centering\arraybackslash} m{\figsz} }
+\newcommand{\showtexframe}[1]{\epsfig{file=#1, width = \figsz}}
+\newcommand{\showtexture}[1]{
+\vspace{0.1cm} \showtexframe{#10.jpeg} \showtexframe{#11.jpeg} \showtexframe{#12.jpeg} \showtexframe{#13.jpeg} \showtexframe{#14.jpeg} \showtexframe{#15.jpeg} \showtexframe{#16.jpeg} \showtexframe{#17.jpeg} \showtexframe{#18.jpeg} \showtexframe{#19.jpeg}
+}
+\newcommand{\showtextureshort}[1]{
+\vspace{0.1cm} \showtexframe{#10.jpeg} \showtexframe{#11.jpeg} \showtexframe{#12.jpeg} \showtexframe{#13.jpeg} \showtexframe{#14.jpeg}
+}
+
+% for todo
+\usepackage{todo}
+\usepackage{xcolor}
+\DeclareRobustCommand\todomatthew[1]{\textcolor{red}{\Todo[Matthew]{#1}}}
+
+\patchcmd{\abstract}{\titlepage}{%
+  \titlepage
+  \phantomsection
+  \addcontentsline{toc}{chapter}{\abstractname}}{}{}
+
+\newenvironment{acknowledgements}{\renewcommand\abstractname{Acknowledgements}\begin{abstract}}{\end{abstract}}
+
+%\setcounter{secnumdepth}{3}
+%\setcounter{tocdepth}{3}
+
+\graphicspath{{figures/}}
+
+\begin{document}
+
+\input{title}
+
+\doublespacing
+
+%-----------Roman pages------------%
+\pagenumbering{roman}
+\input{abstract}
+\input{acknowledgements}
+\setcounter{page}{3}
+\onehalfspacing
+\tableofcontents
+\listoftables
+\listoffigures
+\doublespacing
+%----------------------------------%
+
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\input{introduction}
+
+\input{related_work}
+
+\input{technical_approach}
+
+\input{evaluation}
+
+\input{conclusion}
+
+\bibliographystyle{plain}
+\bibliography{thesis-short,thesis}
+\todos
+\end{document}

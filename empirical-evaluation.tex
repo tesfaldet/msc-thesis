@@ -1,0 +1,17 @@
+\section{Empirical evaluation}
+
+The goal of (dynamic) texture synthesis is to generate 
+samples that are indistinguishable from the real input target
+texture by a human observer. To qualitatively evaluate the proposed model, I will apply my dynamic texture synthesis process 
+to a wide range of textures which will be selected from the 
+DynTex \cite{peteri2010} database and others I will collect in
+the wild. I will group and analyze the results in terms of appearance and dynamics characteristics. To analyze the effect of appearance on the quality of results, textures will be grouped as either regular/near-regular (\eg, periodic tiling and brick wall), irregular (\eg, a field of flowers), or stochastic/near-stochastic (\eg, tv static or water). This follows the taxonomy previously proposed by Lin et al.\ \cite{lin2006quantitative}. Similarly for dynamics, textures will be grouped as either spatially-consistent (\eg, closeup of rippling sea water) or spatially-inconsistent (\eg, rippling sea water juxtaposed 
+with translating clouds in the sky). In addition, I will perform a qualitative comparison with the dynamic texture synthesis approach of Funke et al.\ \cite{funke2017} and Xie et al.\ 
+\cite{xie2017synthesizing}. To quantitatively evaluate the proposed model, I will 
+quantify perceptual differences between dynamic textures synthesized using my method and real dynamic textures.
+
+To validate that the appearance stream will not inadvertently include dynamics information, I will generate videos using the appearance loss only, \ie,
+Eq.\ \ref{eq:apploss}. The produced frames should be valid textures but
+with no coherent dynamics present. Similarly, to validate that the dynamics stream will not 
+inadvertently include appearance information, I will generate videos
+using the dynamics loss only, \ie, Eq.\ \ref{eq:dynloss}. The resulting frames should have no visible appearance.
