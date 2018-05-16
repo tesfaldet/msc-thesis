@@ -4,16 +4,19 @@
 
 The natural world is rich in visual texture. While a precise definition of 
 texture remains to be found, most research consider it as visual patterns that 
-exhibit local spatial variations while maintaining global homogeneity \todomatthew{figure of a texture}. Textures 
+exhibit local spatial variations while maintaining global homogeneity, as shown in Fig.\ \ref{fig:texture}.
+
+\input{fig_texture}
+
+Textures 
 can be static or dynamic: static textures exist in two-dimensional (2D) image space 
 (\eg, grass and water) while dynamic textures extend the notion across time (\eg, 
 fluttering grass and wavy water). As a result, local spatial variations and 
 global homogeneity extend across space \emph{and} time. These temporal patterns 
-have previously been studied under a variety of names, including turbulent-flow 
-motion \cite{heeger1986}, temporal textures \cite{nelson1992}, time-varying 
-textures \cite{bar-joseph2001}, dynamic textures \cite{doretto2003}, textured 
-motion \cite{wang2003} and spacetime textures \cite{derpanis2012spacetime}.
-In this thesis, the term ``dynamic texture'' is adopted. \todomatthew{1 sentence for each reference with a short description of the work and the context. }
+have previously been studied under a variety of names, including turbulent flow \cite{heeger1986} (for extracting optical flow from fluids undergoing irregular fluctuations), temporal textures \cite{nelson1992} (for motion recognition of moving patterns such as windblown trees or rippling water), time-varying 
+textures \cite{bar-joseph2001} (for synthesizing stochastically-moving patterns), dynamic textures \cite{doretto2003} (for modelling and synthesizing stochastically-moving patterns), textured 
+motion \cite{wang2003} (for modelling and synthesizing patterns undergoing stochastic or consistent motion), and spacetime textures \cite{derpanis2012spacetime} (for classifying moving patterns).
+In this thesis, the term ``dynamic texture'' is adopted.
 
 Both static and dynamic texture cues play important roles in our perception of 
 surfaces. Understanding and characterizing these patterns has long been a problem 
@@ -38,13 +41,18 @@ that two textures are often difficult to discriminate when they produce a simila
 distribution of responses from a bank of linear filters. They used a combination 
 of Laplacian and steerable pyramids to deconstruct a given texture and 
 synthesized a new texture by matching the distributions of responses from each
-pyramid level. Image style transfer \todomatthew{include style transfer figure} is a recent extension of texture synthesis where the goal is to 
+pyramid level. More recently, Gatys \etal \cite{gatys2015} demonstrated 
+impressive results for texture synthesis by using a convolutional network (ConvNet) instead of a linear 
+bank of filters to model the non-linear spatial statistics of a given texture.
+
+Image style transfer \todomatthew{include style transfer figure} is a recent extension of texture synthesis where the goal is to 
 synthesize a texture from a source image while constraining the process in order 
 to preserve the semantic content of another image. This can be considered as a 
-texture transfer problem \todomatthew{cite texture transfer papers}. Gatys \etal \cite{gatys2016image} demonstrated 
-impressive results by using a convolutional network (ConvNet) instead of a linear 
-bank of filters to model the non-linear spatial statistics of a given texture and semantic content of a given image. The focus of this work is on the synthesis of dynamic texture 
-samples based on a single exemplar through the use of ConvNets. \todomatthew{discuss the previous use of purely filter driven characterizations of textures and the current use of CNNs.}
+texture transfer problem, as previously demonstrated by Efros \etal \cite{efros2001image} where they transferred a given texture to another image by stitching together small patches of the given texture while conforming to the luminance of the other image. Although the simplicity of their approach was attractive, it failed for highly structured textures due to patch boundary inconsistencies, limiting the selection of acceptable textures. 
+As a follow-up to \cite{gatys2015}, Gatys \etal modified their previous ConvNet to support texture transfer by including an additional objective that enforced the synthesized texture to match the semantic content of a given image, naming the process \emph{image style transfer} \cite{gatys2016image}. Unlike the patch-based method of Efros \etal \cite{efros2001image}, Gatys \etal's \cite{gatys2016image} approach of using a ConvNet was more robust to textures with long-range consistencies.
+
+This work extends the ConvNet model of Gatys \etal \cite{gatys2016image} for texture synthesis. Specifically, the focus of this work is on the synthesis of dynamic texture 
+samples based on a single exemplar through the use of ConvNets.
 
 \section{Outline of thesis}
 
