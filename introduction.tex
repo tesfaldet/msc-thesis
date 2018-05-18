@@ -1,4 +1,4 @@
-\chapter{Introduction \todomatthew{almost finished}}
+\chapter{Introduction}
 
 \section{Motivation}
 
@@ -34,7 +34,9 @@ cue. Gibson \cite{gibson1950perception} proposed the \emph{texture gradient} as
 the primary basis of surface perception by humans. He revealed that neighbouring areas on a textured surface are perceived differently only due to differences
 in surface orientation and distance from the observer.
 
-Texture synthesis \todomatthew{perhaps include a figure of texture synthesis} is the process of algorithmically constructing a texture that
+\input{fig_texture_synthesis}
+
+Texture synthesis (Fig.\ \ref{fig:texture_synthesis}) is the process of algorithmically constructing a texture that
 matches or extends a given source texture by taking advantage of its structural 
 content. Heeger and Bergen \cite{heeger1995pyramid} took advantage of the fact 
 that two textures are often difficult to discriminate when they produce a similar 
@@ -45,7 +47,9 @@ pyramid level. More recently, Gatys \etal \cite{gatys2015} demonstrated
 impressive results for texture synthesis by using a convolutional network (ConvNet) instead of a linear 
 bank of filters to model the non-linear spatial statistics of a given texture.
 
-Image style transfer \todomatthew{include style transfer figure} is a recent extension of texture synthesis where the goal is to 
+\input{fig_style_transfer}
+
+Image style transfer (Fig.\ \ref{fig:style_transfer}) is a recent extension of texture synthesis where the goal is to 
 synthesize a texture from a source image while constraining the process in order 
 to preserve the semantic content of another image. This can be considered as a 
 texture transfer problem, as previously demonstrated by Efros \etal \cite{efros2001image} where they transferred a given texture to another image by stitching together small patches of the given texture while conforming to the luminance of the other image. Although the simplicity of their approach was attractive, it failed for highly structured textures due to patch boundary inconsistencies, limiting the selection of acceptable textures. 
