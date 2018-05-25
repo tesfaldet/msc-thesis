@@ -7,7 +7,7 @@ variations between frames.
 Each stream consists of a ConvNet whose activation 
 statistics are used to characterize the dynamic texture.
 Synthesizing a dynamic texture is formulated as an optimization 
-problem with the objective of matching the activation 
+problem with the objective of matching these activation 
 statistics.
 The dynamic texture synthesis approach is summarized in Fig.\ \ref{fig:architecture}
 and the individual pieces are described in turn in the
@@ -18,106 +18,119 @@ following sections.
 \section{Texture model: Appearance stream}
 
 The appearance stream follows the spatial texture model
-introduced by Gatys et al.\ \cite{gatys2015} which is
-briefly reviewed here.
-The key idea is that feature correlations in a 
+introduced by Gatys \etal \cite{gatys2015} which was reviewed in the previous chapter \todomatthew{talk about Gatys style transfer in related work}.
+\todomatthew{talk about texture synthesis in related work}
+To briefly review, the key idea is that feature auto-correlations (\ie, normalized \emph{Gram} matrices) in a 
 ConvNet trained for 
-object recognition  
+object recognition (\eg, VGG-19 \cite{simonyan2014very}) 
 capture texture appearance.
-The same publicly available normalized VGG-19 network \cite{simonyan2014very} used by Gatys et al.\ \cite{gatys2015} is used here.
+The same publicly available normalized VGG-19 ConvNet \cite{simonyan2014very} used by Gatys et al.\ \cite{gatys2015} is used here.
 
-To capture the appearance of an input dynamic texture, we first
-perform a forward pass with each frame of the image sequence
-through the ConvNet and compute the feature activations,
+\subsection{Target texture appearance}
+
+To capture the appearance of an input dynamic texture, an initial forward pass through VGG-19 is performed with each frame of the image sequence to compute the feature activations (filter responses),
 $\mathbf{A}^{lt} \in \mathbb{R}^{N_l\times M_l}$, for various
 levels in the network, where $N_l$ and $M_l$ denote
-the number of filters and the number of spatial locations of layer
+the number of feature activations and the number of spatial locations of layer
 $l$ at time $t$, respectively.
-The correlations of the filter responses in a particular layer are
+The auto-correlations of the filter responses in a particular layer are
 averaged over the frames and encapsulated by a Gram matrix,
 $\mathbf{G}^{l} \in \mathbb{R}^{N_l \times N_l}$, whose
-entries are given by
-$G_{ij}^l = \frac{1}{T N_l M_l} \sum_{t=1}^T \sum_{k=1}^{M_l} A_{ik}^{lt} A_{jk}^{lt}$,
+entries are given by:
+\begin{equation}
+	G_{ij}^l = \frac{1}{T N_l M_l} \sum_{t=1}^T \sum_{k=1}^{M_l} A_{ik}^{lt} A_{jk}^{lt}\ ,
+	\label{eq:gram_target}
+\end{equation}
 where $T$ denotes the number of input frames
 and $A_{ik}^{lt}$ denotes the activation of feature $i$ at
 location $k$ in layer $l$ on the target frame $t$.
+
+\subsection{Synthesized texture appearance}
+
 The synthesized texture appearance is similarly represented by a
 Gram matrix, $\hat{\mathbf{G}}^{lt} \in \mathbb{R}^{N_l \times N_l}$,
-whose activations are given by
-$\hat{G}_{ij}^{lt} = \frac{1}{N_l M_l} \sum_{k=1}^{M_l} \hat{A}_{ik}^{lt} \hat{A}_{jk}^{lt}$,
+whose activations are given by:
+\begin{equation}
+	\hat{G}_{ij}^{lt} = \frac{1}{N_l M_l} \sum_{k=1}^{M_l} \hat{A}_{ik}^{lt} \hat{A}_{jk}^{lt}\ ,
+	\label{eq:gram_synthesized}	
+\end{equation}
 where $\hat{A}_{ik}^{lt}$ denotes the activation of feature $i$ at
 location $k$ in layer $l$ on the synthesized frame $t$.
+
+\subsection{Appearance loss}
+
 The appearance loss, $\mathcal{L}_\text{appearance}$, is then 
 defined as the temporal average of the mean squared error between
-the Gram matrix of the input texture and that of the generated
+the Gram matrix of the input texture and that of the synthesized
 texture computed at each frame:
 \begin{equation}
    \mathcal{L}_\text{appearance} = \frac{1}{L_\text{app} T_\text{out}} \sum_{t=1}^{T_\text{out}} \sum_{l} \Vert \mathbf{G}^l - \hat{\mathbf{G}}^{lt} \Vert^2_F\ ,
    \label{eq:apploss}
 \end{equation}
-where $L_\text{app}$ is the number of layers used to compute Gram
+where $L_\text{app}$ is the number of VGG-19 layers used to compute Gram
 matrices, $T_\text{out}$ is the number of frames being generated in
 the output, and $\Vert \cdot \Vert_F$ is the Frobenius norm.
-Consistent with previous work \cite{gatys2015}, we compute Gram matrices on the
+Consistent with previous work \cite{gatys2015}, Gram matrices are computed on the
 following layers: 
 \emph{conv1\_1}, \emph{pool1}, \emph{pool2}, \emph{pool3}, and \emph{pool4}.
 
 \section{Texture model: Dynamics stream}
 
-There are three primary goals in designing our dynamics stream.
-First, the activations of the network must 
-represent the temporal variation of the input pattern.
-Second, the activations should be largely invariant to the
-appearance of the images which should be characterized
-by the appearance stream described above.
-Finally, the representation must be differentiable to enable 
-synthesis.
+There are three primary goals in designing the dynamics stream ConvNet.
+\begin{enumerate}
+	\item The activations of the ConvNet must represent the temporal variation of the input pattern.
+	\item The activations should be largely invariant to the appearance (\ie, spatial content) of the images (which should be characterized by the appearance stream described above).
+	\item The dynamics representation must be differentiable to enable synthesis via a ConvNet.
+\end{enumerate}
+
 By analogy to the appearance stream, an obvious choice
 is a ConvNet architecture suited for computing
-optical flow (\eg, \cite{dosovitskiy2015,ilg2017}) which
+optical flow \todomatthew{talk about optical flow in related work} (\eg, \cite{dosovitskiy2015,ilg2017}) which
 is naturally differentiable.
 However, with most such models it is unclear how invariant
 their layers are to appearance.
-Instead, we propose a novel network architecture which is
+Instead, a novel network architecture is proposed which is
 motivated by the spacetime-oriented energy model
-\cite{derpanis2012spacetime,simoncelli1998}.
+\cite{derpanis2012spacetime,simoncelli1998}. \todomatthew{talk about SOE for texture recognition in related work?}
+
+\subsection{Review: Marginalized spacetime oriented energies}
 
 In motion energy models, the velocity of image content (\ie, motion)
-is interpreted as a three-dimensional orientation in the $x$-$y$-$t$
+is interpreted as a 3D orientation in the $x$-$y$-$t$
 spatiotemporal domain
-\cite{adelson1985spatiotemporal,fahle1981,heeger1988,simoncelli1998,watson1983}.
+\cite{adelson1985spatiotemporal,fahle1981,heeger1988,simoncelli1998,watson1983}. \todomatthew{include figure of motion in xyt}
 In the frequency domain, the signal energy of a translating
 pattern can be shown to lie on a plane through the origin
 where the slant of the plane is defined by the velocity of
-the  pattern.
+the  pattern. \todomatthew{include figure of motion in frequency space}
 Thus, motion energy models attempt to identify this 
-orientation-plane (and hence the patterns velocity) via
+orientation-plane (and hence the pattern's velocity) via
 a set of image filtering operations.
-More generally
+More generally,
 the constituent
 spacetime orientations for a spectrum of common
-visual patterns (including translation and dynamic
-textures) can serve as a basis for describing the temporal
+visual patterns can serve as a basis for describing the temporal
 variation of an image sequence \cite{derpanis2012spacetime}.
-This suggests that motion energy models may form an
-ideal basis for our dynamics stream.
+This observation suggests that motion energy models may form an
+ideal basis for the dynamics stream. Specifically, the spacetime-oriented energy models proposed by Derpanis \etal \cite{derpanis2012spacetime}
+and Simoncelli \etal \cite{simoncelli1998} are used to motivate the
+network architecture, which is briefly reviewed here; 
+see Chapter \ref{chap:related_work} \todomatthew{talk about Derpanis' MSOE in related work} for a more in-depth description.
 
-Specifically, we use the spacetime-oriented energy model
-\cite{derpanis2012spacetime,simoncelli1998} to motivate our
-network architecture which we briefly review here; 
-see \cite{derpanis2012spacetime} for a more in-depth 
-description.
 Given an input video, 
 a bank of oriented 3D
-filters are applied which are sensitive to a range of
-spatiotemporal orientations.
-These filter activations are rectified (squared) and
+filters, which are sensitive to a range of
+spatiotemporal orientations, are applied.
+These filter activations are then rectified (squared) and
 pooled over local regions to make the responses robust
 to the phase of the input signal, \ie, robust to the
 alignment of the filter with the underlying image
-structure.
-Next, filter activations consistent with the same spacetime
-orientation are summed.
+structure. At this point, each oriented energy measurement is confounded with spatial orientation. Consequently, in cases where the 
+spatial image structure varies wildly about an otherwise coherent dynamic
+region, the responses of the bank of oriented filters will reflect this
+behaviour and thereby become dependent on spatial appearance; whereas, a description consisting purely 
+of pattern dynamics is sought.
+To remove this difficulty, the spatial orientation component of each filter is discounted via ``marginalization''. Specifically, filter activations consistent with the same temporal orientation (not necessarily the same spatial orientation) are summed. \todomatthew{clarify with Kosta}
 These responses provide a pixelwise distributed measure
 of which orientations (frequency domain planes) are
 present in the input.
@@ -133,37 +146,58 @@ results in a representation that is robust to local
 appearance variations but highly selective to 
 spacetime orientation.
 
-Using this model as our basis, we propose the following 
-fully convolutional 
-network
-\cite{shelhamer2017}.
-Our ConvNet input is a pair of temporally consecutive greyscale images.
+\subsection{ConvNet architecture}
+
+Using this model as the basis, the following fully convolutional 
+network \cite{shelhamer2017} \todomatthew{talk about this in related work?} is proposed.
+The ConvNet input is a pair of temporally consecutive greyscale images, $\mathbf{I} \in \mathbb{R}^{H \times W \times C \times T}$ ($\text{height} \times \text{width} \times \text{channels} \times \text{time}$), where $C=1$ and $T=2$. From here forth, the channel dimension ($C$) will be omitted for simplicity.
 Each input pair is first normalized to have zero-mean and unit
-variance.
-This step provides a level of invariance to overall
-brightness and contrast, \ie, global additive and
-multiplicative signal variations.
-The first layer consists of 32 3D spacetime convolution
-filters of size $11\times 11 \times 2$
-($\text{height} \times \text{width} \times \text{time}$).
+variance (\ie, contrast normalization or ``instance normalization'' \cite{ulyanov2017}), as follows:
+\begin{equation}
+	\mathbf{I}_N = \frac{\mathbf{I} - \mu}{\sigma + \epsilon}\ ,
+\end{equation}
+where $\mu$ is the average pixel value of the input pair, $\sigma$ is the standard deviation of the input pair, and $\epsilon$ is a small value to prevent dividing by zero.
+This step provides a level of invariance \todomatthew{Rick: Given that you're using normalized, bandpass filters, is this preprocessing necessary?} to overall brightness and contrast, \ie, global additive and
+multiplicative signal variations, easing the training process of the ConvNet. \todomatthew{maybe talk about how it relates to batchnorm?}
+The first layer consists of a 3D convolution over the normalized input pair with a bank of 32 3D filters of size $11\times 11 \times 2$
+($\text{height} \times \text{width} \times \text{time}$), resulting in an output of spacetime oriented energy measurements, \todomatthew{Rick: Really only 2 taps in time?}
+\begin{equation}
+	E_F(\mathbf{x}) = F * \mathbf{I}_N(\mathbf{x})\ ,
+\end{equation}
+where $E_F$ denotes the response of filter $F$ (of size $11\times 11 \times 2$) after a convolution, $*$, centered about $\mathbf{x} \equiv (x, y, t)$.
 Next, a squaring activation function and $5 \times 5$
 spatial max-pooling (with a stride of one) is applied to
-make the responses robust to local signal phase.
-A $1\times 1$
-convolution layer follows with 64 filters that combines
+make the responses robust to local signal phase:
+\begin{equation}
+	\bar{E}_F(\mathbf{x}) = \max_{i\in\Omega}\{E_F(i)^2\}\ ,
+\end{equation}
+where $\Omega$ is a $5 \times 5$ spatial neighbourhood centered about $\mathbf{x}$.
+A 2D convolution follows with 64 filters of size $1 \times 1$ that combines
 energy measurements that are consistent
-with the same orientation.
+with the same orientation:
+\begin{equation}
+	E_G(\mathbf{x}) = G * \bar{E}_F(\mathbf{x})\ ,
+\end{equation}
+where  $\tilde{E}_G$ denotes the response of filter $G$ (of size $1 \times 1$) after a convolution.
 Finally, to remove local contrast dependence, an
-$\text{L}_1$ divisive normalization is applied.
+$\text{L}_1$ divisive normalization is applied to each spatial location: \todomatthew{explain why this is not redundant due to contrast norm on input}
+\begin{equation}
+	\bar{E}_G(\mathbf{x}) = \frac{E_G(\mathbf{x})}{\Vert E_G(\mathbf{x}) \Vert_1 + \epsilon}\ ,
+\end{equation}
+where $\Vert \cdot \Vert_1$ is the $\text{L}_1$ norm computed over the filter responses of all filters.
 
 To capture spacetime orientations beyond those capable
 with the limited receptive fields used in the initial
-layer, we compute a five-level spatial Gaussian pyramid.
-Each pyramid level is
-processed independently
+layer, a five-level spatial Gaussian pyramid is computed.
+Each pyramid level is processed independently
 with the same spacetime-oriented energy model and then
 bilinearly upsampled to the original resolution and
-concatenated.
+concatenated:
+\begin{equation}
+	E(\mathbf{x}) = \left( \bar{E}_G(\mathbf{x}) \Vert \bar{E}_G(\mathbf{x}) \Vert \bar{E}_G(\mathbf{x})\right)
+\end{equation}
+
+\subsubsection{Training}
 
 Prior energy model instantiations (\eg,
 \cite{adelson1985spatiotemporal,derpanis2012spacetime,simoncelli1998})
