@@ -194,64 +194,78 @@ with the same spacetime-oriented energy model and then
 bilinearly upsampled to the original resolution and
 concatenated:
 \begin{equation}
-	E(\mathbf{x}) = \left( \bar{E}_G(\mathbf{x}) \Vert \bar{E}_G(\mathbf{x}) \Vert \bar{E}_G(\mathbf{x})\right)
+	E(\mathbf{x}) = \left( \bar{E}_G(\mathbf{x}) \Vert \bar{E}_G(\mathbf{x}_{\downarrow\times2})_{\uparrow\times2} \Vert \cdots \Vert \bar{E}_G(\mathbf{x}_{\downarrow\times2^{k-1}})_{\uparrow\times2^{k-1}} \Vert \bar{E}_G(\mathbf{x}_{\downarrow\times2^k})_{\uparrow\times2^k} \right)\ ,
 \end{equation}
+where $(\cdot)_{\downarrow \times n}$ and $(\cdot)_{\uparrow \times n}$ denote an $n$-times downsample and upsample, respectively, and $k+1$ denotes the number of pyramid levels. This final output of the dynamics encoding stage is named the ``concatenation layer''.
 
 \subsubsection{Training}
 
 Prior energy model instantiations (\eg,
 \cite{adelson1985spatiotemporal,derpanis2012spacetime,simoncelli1998})
 used handcrafted filter weights.
-While a similar approach could be followed here, we
-opt to learn the weights so that they are better
-tuned to natural imagery.
-To train the network weights, we add additional decoding
-layers that take the concatenated distributed
-representation and apply a $3\times 3$ convolution
+While a similar approach could be followed here, instead the weights
+are learned so that they better deal with the noise distributions encountered in natural imagery.
+To train the network weights, additional decoding
+layers are added that take the concatenated distributed
+representation from the concatenation layer and apply a $3\times 3$ convolution
 (with 64 filters), ReLU activation, and a $1\times 1$
 convolution (with 2 filters) that yields a two channel
-output encoding the optical flow directly.
+output encoding the optical flow directly. \todomatthew{introduce optical flow in related work as background}
 The proposed architecture is illustrated in
 Fig.\ \ref{fig:MSOE}.
 
 \input{fig_MSOEnet}
 
-For training, we use the standard average
+For training, the standard average
 endpoint error (aEPE) flow metric (\ie, $\text{L}_2$
-norm) between the predicted flow and the ground truth
+norm) is used between the predicted flow and the ground truth
 flow as the loss.
-Since no large-scale flow dataset exists that captures
-natural imagery with groundtruth flow, we take an
-unlabeled video dataset and apply an existing flow
-estimator \cite{revaud2015epicflow} to estimate optical
-flow for training,
+Since no large-scale optical flow dataset exists that captures
+natural imagery with groundtruth flow, a new dataset had to be made. Videos
+from an unlabeled video dataset are fed through an existing flow
+estimator to produce optical
+flow ``semi-groundtruths'' for training,
 \cf \cite{tran2016}.
-For training data, we used videos from the UCF101
-dataset \cite{soomro2012ucf101} with geometric
-and photometric data augmentations similar to those used
-by FlowNet \cite{dosovitskiy2015}, and optimized the aEPE loss using
-Adam \cite{kingma2017}.
-Inspection of the learned filters in the initial layer
+For the unlabeled video dataset, the UCF101
+dataset for action recognition \cite{soomro2012ucf101} is used as it contains complex movements of natural imagery at desirably slow speeds \todomatthew{histogram of flow magnitudes}, similar to the expected pattern velocity of the dynamic textures used in this work. The synthetic Flying Chairs dataset \cite{dosovitskiy2015} was also considered as it contained ground truth optical flow, however, training the dynamics stream on this dataset reduced the overall quality of synthesized dynamic textures. This can be explained by the less complex and faster movement of the rigid objects in Flying Chairs, which is undesirable for estimating motion of dynamic textures.
+For producing the optical flow semi-groundtruths, a ConvNet-based model, EpicFlow \cite{revaud2015epicflow}, is used for 
+its superior performance over traditional handcrafted approaches and tendency
+to produce smooth predictions---ideal training data for the dynamics stream. \todomatthew{talk about why EpicFlow and not FlowNet?}
+
+The distribution of movement directions \todomatthew{radial histogram of flow for ucf101} in UCF101 is biased to left-to-right and right-to-left motions, which is undesirable as dynamic textures are not necessarily restricted to certain directions of motion. To combat this dataset bias, geometric data augmentations similar to those used by FlowNet \cite{dosovitskiy2015} are used to equalize the distribution of movement directions in the generated dataset. Additionally, photometric data augmentations similar to those used by FlowNet \cite{dosovitskiy2015} are used here as well. The aEPE loss is optimized using Adam \cite{kingma2017}.
+Inspection of the learned filters in the initial layer of the encoding stage
 showed evidence of spacetime-oriented filters, consistent with
-the handcrafted filters used in previous work \cite{derpanis2012spacetime}.
+the handcrafted filters used in previous work \cite{derpanis2012spacetime}. \todomatthew{figure of filters}
+
+\subsection{Target texture dynamics}
 
 Similar to the appearance stream, filter response correlations
 in a particular layer of the dynamics
 stream are averaged over the number of image frame
 pairs and encapsulated by a Gram matrix,
 $\mathbf{G}^{l} \in \mathbb{R}^{N_l \times N_l}$,
-whose entries are given by
-$G_{ij}^l = \frac{1}{(T-1) N_l M_l} \sum_{t=1}^{T-1} \sum_{k=1}^{M_l} D_{ik}^{lt} D_{jk}^{lt}$,
+whose entries are given by:
+\begin{equation}
+	G_{ij}^l = \frac{1}{(T-1) N_l M_l} \sum_{t=1}^{T-1} \sum_{k=1}^{M_l} D_{ik}^{lt} D_{jk}^{lt}\ ,	
+\end{equation}
 where $D_{ik}^{lt}$ denotes the activation of feature $i$ at
 location $k$ in layer $l$ on the target frames $t$ and $t+1$.
+
+\subsection{Synthesized texture dynamics}
+
 The dynamics of the synthesized texture is represented
 by a Gram matrix of filter response correlations 
 computed separately for each pair of frames,
 $\hat{\mathbf{G}}^{lt} \in \mathbb{R}^{N_l \times N_l}$,
-with entries
-$\hat{G}_{ij}^{lt} = \frac{1}{N_l M_l} \sum_{k=1}^{M_l} \hat{D}_{ik}^{lt} \hat{D}_{jk}^{lt}$,
+with entries:
+\begin{equation}
+	\hat{G}_{ij}^{lt} = \frac{1}{N_l M_l} \sum_{k=1}^{M_l} \hat{D}_{ik}^{lt} \hat{D}_{jk}^{lt}\ ,	
+\end{equation}
 where $\hat{D}_{ik}^{lt}$ denotes the activation of feature $i$ at
 location $k$ in layer $l$ on the synthesized frames $t$ and $t+1$.
+
+\subsection{Dynamics loss}
+
 The dynamics loss, $\mathcal{L}_\text{dynamics}$, is defined as
 the average of the mean squared error between the Gram matrices
 of the input texture
@@ -262,17 +276,16 @@ and those of the generated texture:
 where $L_\text{dyn}$ is the number of ConvNet layers being used
 in the dynamics stream.
 
-Here we propose to use the output of the concatenation layer,
+The Gram matrix is computed on the output of the concatenation layer,
 where the multiscale distributed representation of orientations is
-stored, as the layer to compute the Gram matrix.
-While it is tempting to use the predicted flow output from the
-network, this generally yields poor results as shown in our evaluation.
+stored. While it is tempting to use the predicted optical flow output from the
+network's decoder stage, this generally yields poor results as shown in the evaluation.
 Due to the complex, temporal variation present in dynamic
 textures, they contain a variety of local spacetime
 orientations rather than a single dominant orientation.
 As a result, the flow estimates will tend to be an average of the
 underlying  orientation measurements and consequently not
-descriptive. A comparison between the texture synthesis results using the concatenation layer and the predicted flow output is provided in Sec.\ \ref{empirical_evaluation}.
+descriptive. A comparison between the texture synthesis results using the concatenation layer and the predicted flow output is provided in Chapter \ref{chap:evaluation}.
 
 \section{Texture generation}\label{sec:texgen}
 The overall dynamic texture loss consists of the combination of the appearance loss, Eq.\ (\ref{eq:apploss}),
@@ -285,12 +298,13 @@ appearance and dynamics content, respectively.
 Dynamic textures are implicitly defined as the (local) minima 
 of this loss.
 Textures are generated by optimizing Eq.\ 
-(\ref{eq:dyntexloss}) with respect to the spacetime volume,
+(\ref{eq:dyntexloss}) with respect to the synthesized spacetime volume,
 \ie, the pixels of the video.
 Variations in the resulting texture are found by initializing the
 optimization process using IID Gaussian noise.
-Consistent with previous work \cite{gatys2015}, we use
-L-BFGS \cite{liu1989} optimization. 
+Consistent with previous work \cite{gatys2015}, L-BFGS \cite{liu1989} is used for optimization. Dynamic texture synthesis results are provided in Chapter \ref{chap:evaluation}.
+
+\subsection{Incremental texture generation}
 
 Naive application of the outlined approach will consume
 increasing amounts of memory as the temporal extent of the 
@@ -309,4 +323,20 @@ sequence objective.
 The flexibility of this framework allows other texture generation
 problems to be handled simply by altering the 
 initialization of frames and controlling which
-frames or frame regions are updated.
+frames or frame regions are updated. \todomatthew{point to supplemental?}
+
+\subsection{Temporally-endless texture generation}
+
+An interesting extension are dynamic textures where there is no discernible temporal seam between the last and first frames. Played as a loop, these textures appear to be temporally endless. This is trivially achieved by adding an additional loss to the dynamics stream that ties the last frame to the first. \todomatthew{point to supplemental?}
+
+\subsection{Dynamics style transfer}
+
+The underlying assumption of the proposed model is that the appearance
+and dynamics of dynamic textures can be factorized.
+As such, it should allow for the transfer of the dynamics of
+one texture onto the appearance of another.
+This has been explored previously for artistic style transfer
+\cite{champandard2016,gatys2017} with static imagery.
+This is accomplished with the proposed model by performing the same 
+optimization as described in Sec.\ \ref{sec:texgen}, but with the target Gram matrices for 
+appearance and dynamics computed from two different textures, respectively.
