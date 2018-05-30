@@ -1,4 +1,4 @@
-\chapter{Technical approach \todomatthew{unfinished}}
+\chapter{Technical approach}
 
 The proposed two-stream approach consists of an appearance
 stream, representing the static (texture) appearance of each frame,
@@ -150,7 +150,7 @@ spacetime orientation.
 
 Using this model as the basis, the following fully convolutional 
 network \cite{shelhamer2017} \todomatthew{talk about this in related work?} is proposed.
-The ConvNet input is a pair of temporally consecutive greyscale images, $\mathbf{I} \in \mathbb{R}^{H \times W \times C \times T}$ ($\text{height} \times \text{width} \times \text{channels} \times \text{time}$), where $C=1$ and $T=2$. From here forth, the channel dimension ($C$) will be omitted for simplicity.
+The ConvNet input is a pair of temporally consecutive greyscale images, $\mathbf{I} \in \mathbb{R}^{T \times H \times W \times C}$ ($\text{time} \times \text{height} \times \text{width} \times \text{channels}$), where $C=1$ and $T=2$. From here forth, the channel dimension ($C$) will be omitted for simplicity.
 Each input pair is first normalized to have zero-mean and unit
 variance (\ie, contrast normalization or ``instance normalization'' \cite{ulyanov2017}), as follows:
 \begin{equation}
@@ -159,12 +159,12 @@ variance (\ie, contrast normalization or ``instance normalization'' \cite{ulyano
 where $\mu$ is the average pixel value of the input pair, $\sigma$ is the standard deviation of the input pair, and $\epsilon$ is a small value to prevent dividing by zero.
 This step provides a level of invariance \todomatthew{Rick: Given that you're using normalized, bandpass filters, is this preprocessing necessary?} to overall brightness and contrast, \ie, global additive and
 multiplicative signal variations, easing the training process of the ConvNet. \todomatthew{maybe talk about how it relates to batchnorm?}
-The first layer consists of a 3D convolution over the normalized input pair with a bank of 32 3D filters of size $11\times 11 \times 2$
-($\text{height} \times \text{width} \times \text{time}$), resulting in an output of spacetime oriented energy measurements, \todomatthew{Rick: Really only 2 taps in time?}
+The first layer consists of a 3D convolution over the normalized input pair with a bank of 32 3D filters of size $2 \times 11 \times 11$
+($\text{time} \times \text{height} \times \text{width}$), resulting in an output of spacetime oriented energy measurements, \todomatthew{Rick: Really only 2 taps in time?}
 \begin{equation}
 	E_F(\mathbf{x}) = F * \mathbf{I}_N(\mathbf{x})\ ,
 \end{equation}
-where $E_F$ denotes the response of filter $F$ (of size $11\times 11 \times 2$) after a convolution, $*$, centered about $\mathbf{x} \equiv (x, y, t)$.
+where $E_F$ denotes the response of filter $F$ (of size $2 \times 11 \times 11$) after a convolution, $*$, centered about $\mathbf{x} \equiv (t, x, y)$.
 Next, a squaring activation function and $5 \times 5$
 spatial max-pooling (with a stride of one) is applied to
 make the responses robust to local signal phase:
@@ -235,7 +235,9 @@ to produce smooth predictions---ideal training data for the dynamics stream. \to
 The distribution of movement directions \todomatthew{radial histogram of flow for ucf101} in UCF101 is biased to left-to-right and right-to-left motions, which is undesirable as dynamic textures are not necessarily restricted to certain directions of motion. To combat this dataset bias, geometric data augmentations similar to those used by FlowNet \cite{dosovitskiy2015} are used to equalize the distribution of movement directions in the generated dataset. Additionally, photometric data augmentations similar to those used by FlowNet \cite{dosovitskiy2015} are used here as well. The aEPE loss is optimized using Adam \cite{kingma2017}.
 Inspection of the learned filters in the initial layer of the encoding stage
 showed evidence of spacetime-oriented filters, consistent with
-the handcrafted filters used in previous work \cite{derpanis2012spacetime}. \todomatthew{figure of filters}
+the handcrafted filters used in previous work \cite{derpanis2012spacetime}. This is illustrated in Fig.\ \ref{fig:filters}.
+
+\input{fig_filters}
 
 \subsection{Target texture dynamics}
 
