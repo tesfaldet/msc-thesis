@@ -31,10 +31,15 @@
 \newcolumntype{V}{>{\centering\arraybackslash} m{\figsz} }
 \newcommand{\showtexframe}[1]{\epsfig{file=#1, width = \figsz}}
 \newcommand{\showtexture}[1]{
-\vspace{0.1cm} \showtexframe{#10.jpeg} \showtexframe{#11.jpeg} \showtexframe{#12.jpeg} \showtexframe{#13.jpeg} \showtexframe{#14.jpeg} \showtexframe{#15.jpeg} \showtexframe{#16.jpeg} \showtexframe{#17.jpeg} \showtexframe{#18.jpeg} \showtexframe{#19.jpeg}
+\vspace{0.1cm} \showtexframe{#10.jpeg} \showtexframe{#11.jpeg} \showtexframe{#12.jpeg} \showtexframe{#13.jpeg} \showtexframe{#14.jpeg} \showtexframe{#15.jpeg} \showtexframe{#16.jpeg} \showtexframe{#17.jpeg} \showtexframe{#18.jpeg}
 }
 \newcommand{\showtextureshort}[1]{
 \vspace{0.1cm} \showtexframe{#10.jpeg} \showtexframe{#11.jpeg} \showtexframe{#12.jpeg} \showtexframe{#13.jpeg} \showtexframe{#14.jpeg}
+}
+
+% teletype text to go to newline if overflow
+\newcommand\wtt[1]{%
+  \hfil\penalty0\hfilneg\texttt{#1}%
 }
 
 % for todo
