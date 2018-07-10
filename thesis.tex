@@ -17,7 +17,11 @@
 
 % Include other packages here, before hyperref.
 \usepackage{subcaption}
-\usepackage{animate}
+
+% For appendix
+\usepackage{csvsimple}
+\usepackage{rotating}
+\usepackage{lscape}
 
 % If you comment hyperref and then uncomment it, you should delete
 % egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
@@ -27,6 +31,7 @@
     linkcolor = {}
 }
 
+% for displaying textures
 \newcommand{\figsz}{0.47in}
 \newcolumntype{V}{>{\centering\arraybackslash} m{\figsz} }
 \newcommand{\showtexframe}[1]{\epsfig{file=#1, width = \figsz}}
@@ -47,11 +52,13 @@
 \usepackage{xcolor}
 \DeclareRobustCommand\todomatthew[1]{\textcolor{red}{\Todo[Matthew]{#1}}}
 
+% include abstract in table of contents
 \patchcmd{\abstract}{\titlepage}{%
   \titlepage
   \phantomsection
   \addcontentsline{toc}{chapter}{\abstractname}}{}{}
 
+% acknowledgements is an abstract (to get the same formatting)
 \newenvironment{acknowledgements}{\renewcommand\abstractname{Acknowledgements}\begin{abstract}}{\end{abstract}}
 
 %\setcounter{secnumdepth}{3}
@@ -94,4 +101,23 @@
 \bibliographystyle{plain}
 \bibliography{thesis-short,thesis}
 %\todos
+
+%------------Appendix--------------%
+\appendix
+
+\input{experimental_procedure}
+
+\input{qualitative_results}
+
+\input{full_user_study_results}
+
+\input{sup_figures}
+
+\clearpage
+\onecolumn
+\input{sup_tables}
+\clearpage
+\twocolumn
+%----------------------------------%
+
 \end{document}

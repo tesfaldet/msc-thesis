@@ -1,0 +1,541 @@
+\begin{table*}
+\centering
+	\resizebox{0.9\textwidth}{!}{%
+	\csvreader[tabular=|l|l|,
+	    table head=\hline Dynamic texture & 300 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_concat_300.csv}{Name=\Name,Accuracy=\Accuracy}%
+	{\Name & \Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 400 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_concat_400.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 600 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_concat_600.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 1200 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_concat_1200.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 2400 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_concat_2400.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 3600 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_concat_3600.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 4800 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_concat_4800.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	}
+	\caption[Per-texture accuracies averaged over exposure times, using the concatenation layer]{Per-texture accuracies averaged over exposure times, using the concatenation layer. Each texture accuracy includes a margin of error with a $95\%$ statistical confidence.}
+	\label{tab:table_concat}
+\end{table*}
+
+\begin{table*}
+	\centering
+	\resizebox{0.65\textwidth}{!}{%
+	\csvreader[tabular=|l|l|,
+	    table head=\hline Dynamic texture & Short (300-600 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_concat_short.csv}{Name=\Name,Accuracy=\Accuracy}%
+	{\Name & \Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline Long (1200-4800 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_concat_long.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline All (300-4800 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_concat_all.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	}
+	\caption[Per-texture accuracies averaged over a range of exposure times, using the concatenation layer]{Per-texture accuracies averaged over a range of exposure times, using the concatenation layer. Each texture accuracy includes a margin of error with a $95\%$ statistical confidence.}
+	\label{tab:table_concat_range}
+\end{table*}
+
+%%%%%%
+
+\begin{table*}
+	\centering
+	\resizebox{0.9\textwidth}{!}{%
+	\csvreader[tabular=|l|l|,
+	    table head=\hline Dynamic texture & 300 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_flowdecode_300.csv}{Name=\Name,Accuracy=\Accuracy}%
+	{\Name & \Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 400 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_flowdecode_400.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 600 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_flowdecode_600.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 1200 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_flowdecode_1200.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 2400 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_flowdecode_2400.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 3600 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_flowdecode_3600.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 4800 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_flowdecode_4800.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	}
+	\caption[Per-texture accuracies averaged over exposure times, using the flow decode layer]{Per-texture accuracies averaged over exposure times, using the flow decode layer. Each texture accuracy includes a margin of error with a $95\%$ statistical confidence.}
+	\label{tab:table_flowdecode}
+\end{table*}
+
+\begin{table*}
+	\centering
+	\resizebox{0.65\textwidth}{!}{%
+	\csvreader[tabular=|l|l|,
+	    table head=\hline Dynamic texture & Short (300-600 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_flowdecode_short.csv}{Name=\Name,Accuracy=\Accuracy}%
+	{\Name & \Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline Long (1200-4800 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_flowdecode_long.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline All (300-4800 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_flowdecode_all.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	}
+	\caption[Per-texture accuracies averaged over a range of exposure times, using the flow decode layer]{Per-texture accuracies averaged over a range of exposure times, using the flow decode layer. Each texture accuracy includes a margin of error with a $95\%$ statistical confidence.}
+	\label{tab:table_flowdecode_range}
+\end{table*}
+
+%%%%%%
+
+\clearpage
+\begin{table*}
+	\centering
+	\resizebox{0.9\textwidth}{!}{%
+	\csvreader[tabular=|l|l|,
+	    table head=\hline Appearance group & 300 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_concat_300.csv}{Name=\Name,Accuracy=\Accuracy}%
+	{\Name & \Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 400 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_concat_400.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 600 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_concat_600.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 1200 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_concat_1200.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 2400 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_concat_2400.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 3600 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_concat_3600.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 4800 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_concat_4800.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	}
+	\caption[Accuracies of textures grouped by appearances, averaged over exposure times, using the concatenation layer]{Accuracies of textures grouped by appearances, averaged over exposure times, using the concatenation layer. Each texture accuracy includes a margin of error with a $95\%$ statistical confidence.}
+	\label{tab:table_concat_app}
+\end{table*}
+
+\begin{table*}
+	\centering
+	\resizebox{0.65\textwidth}{!}{%
+	\csvreader[tabular=|l|l|,
+	    table head=\hline Appearance group & Short (300-600 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_concat_short.csv}{Name=\Name,Accuracy=\Accuracy}%
+	{\Name & \Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline Long (1200-4800 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_concat_long.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline All (300-4800 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_concat_all.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	}
+	\caption[Accuracies of textures grouped by appearances, averaged over a range of exposure times, using the concatenation layer]{Accuracies of textures grouped by appearances, averaged over a range of exposure times, using the concatenation layer. Each texture accuracy includes a margin of error with a $95\%$ statistical confidence.}
+	\label{tab:table_concat_app_range}
+\end{table*}
+
+\begin{table*}
+	\centering
+	\resizebox{0.9\textwidth}{!}{%
+	\csvreader[tabular=|l|l|,
+	    table head=\hline Appearance group & 300 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_flowdecode_300.csv}{Name=\Name,Accuracy=\Accuracy}%
+	{\Name & \Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 400 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_flowdecode_400.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 600 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_flowdecode_600.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 1200 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_flowdecode_1200.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 2400 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_flowdecode_2400.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 3600 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_flowdecode_3600.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 4800 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_flowdecode_4800.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	}
+	\caption[Accuracies of textures grouped by appearances, averaged over exposure times, using the flow decode layer]{Accuracies of textures grouped by appearances, averaged over exposure times, using the flow decode layer. Each texture accuracy includes a margin of error with a $95\%$ statistical confidence.}
+	\label{tab:table_flowdecode_app}
+\end{table*}
+
+\begin{table*}
+	\centering
+	\resizebox{0.65\textwidth}{!}{%
+	\csvreader[tabular=|l|l|,
+	    table head=\hline Appearance group & Short (300-600 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_flowdecode_short.csv}{Name=\Name,Accuracy=\Accuracy}%
+	{\Name & \Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline Long (1200-4800 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_flowdecode_long.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline All (300-4800 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/appearance_grouping_flowdecode_all.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	}
+	\caption[Accuracies of textures grouped by appearances, averaged over a range of exposure times, using the flow decode layer]{Accuracies of textures grouped by appearances, averaged over a range of exposure times, using the flow decode layer. Each texture accuracy includes a margin of error with a $95\%$ statistical confidence.}
+	\label{tab:table_flowdecode_app_range}
+\end{table*}
+\clearpage
+
+%%%%%%
+
+\clearpage
+\begin{table*}
+	\centering
+	\resizebox{0.9\textwidth}{!}{%
+	\csvreader[tabular=|l|l|,
+	    table head=\hline Dynamics group & 300 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_concat_300.csv}{Name=\Name,Accuracy=\Accuracy}%
+	{\Name & \Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 400 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_concat_400.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 600 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_concat_600.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 1200 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_concat_1200.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 2400 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_concat_2400.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 3600 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_concat_3600.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 4800 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_concat_4800.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	}
+	\caption[Accuracies of textures grouped by dynamics, averaged over exposure times, using the concatenation layer]{Accuracies of textures grouped by dynamics, averaged over exposure times, using the concatenation layer. Each texture accuracy includes a margin of error with a $95\%$ statistical confidence.}
+	\label{tab:table_concat_dyn}
+\end{table*}
+
+\begin{table*}
+	\centering
+	\resizebox{0.65\textwidth}{!}{%
+	\csvreader[tabular=|l|l|,
+	    table head=\hline Dynamics group & Short (300-600 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_concat_short.csv}{Name=\Name,Accuracy=\Accuracy}%
+	{\Name & \Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline Long (1200-4800 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_concat_long.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline All (300-4800 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_concat_all.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	}
+	\caption[Accuracies of textures grouped by dynamics, averaged over a range of exposure times, using the concatenation layer]{Accuracies of textures grouped by dynamics, averaged over a range of exposure times, using the concatenation layer. Each texture accuracy includes a margin of error with a $95\%$ statistical confidence.}
+	\label{tab:table_concat_dyn_range}
+\end{table*}
+
+\begin{table*}
+	\centering
+	\resizebox{0.9\textwidth}{!}{%
+	\csvreader[tabular=|l|l|,
+	    table head=\hline Dynamics group & 300 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_flowdecode_300.csv}{Name=\Name,Accuracy=\Accuracy}%
+	{\Name & \Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 400 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_flowdecode_400.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 600 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_flowdecode_600.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 1200 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_flowdecode_1200.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 2400 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_flowdecode_2400.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 3600 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_flowdecode_3600.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 4800 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_flowdecode_4800.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	}
+	\caption[Accuracies of textures grouped by dynamics, averaged over exposure times, using the flow decode layer]{Accuracies of textures grouped by dynamics, averaged over exposure times, using the flow decode layer. Each texture accuracy includes a margin of error with a $95\%$ statistical confidence.}
+	\label{tab:table_flowdecode_dyn}
+\end{table*}
+
+\begin{table*}
+	\centering
+	\resizebox{0.65\textwidth}{!}{%
+	\csvreader[tabular=|l|l|,
+	    table head=\hline Dynamics group & Short (300-600 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_flowdecode_short.csv}{Name=\Name,Accuracy=\Accuracy}%
+	{\Name & \Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline Long (1200-4800 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_flowdecode_long.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline All (300-4800 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/dynamics_grouping_flowdecode_all.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	}
+	\caption[Accuracies of textures grouped by dynamics, averaged over a range of exposure times, using the flow decode layer]{Accuracies of textures grouped by dynamics, averaged over a range of exposure times, using the flow decode layer. Each texture accuracy includes a margin of error with a $95\%$ statistical confidence.}
+	\label{tab:table_flowdecode_dyn_range}
+\end{table*}
+\clearpage
+
+%%%%%%
+
+\clearpage
+\begin{table*}
+	\centering
+	\resizebox{0.9\textwidth}{!}{%
+	\csvreader[tabular=|l|l|,
+	    table head=\hline Group & 300 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_concat_300.csv}{Name=\Name,Accuracy=\Accuracy}%
+	{\Name & \Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 400 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_concat_400.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 600 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_concat_600.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 1200 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_concat_1200.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 2400 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_concat_2400.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 3600 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_concat_3600.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 4800 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_concat_4800.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	}
+	\caption[Average accuracy over all textures, averaged over exposure times, using the concatenation layer]{Average accuracy over all textures, averaged over exposure times, using the concatenation layer. Each texture accuracy includes a margin of error with a $95\%$ statistical confidence.}
+	\label{tab:table_concat_all}
+\end{table*}
+
+\begin{table*}
+	\centering
+	\resizebox{0.65\textwidth}{!}{%
+	\csvreader[tabular=|l|l|,
+	    table head=\hline Group & Short (300-600 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_concat_short.csv}{Name=\Name,Accuracy=\Accuracy}%
+	{\Name & \Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline Long (1200-4800 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_concat_long.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline All (300-4800 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_concat_all.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	}
+	\caption[Average accuracy over all textures, averaged over a range of exposure times, using the concatenation layer]{Average accuracy over all textures, averaged over a range of exposure times, using the concatenation layer. Each texture accuracy includes a margin of error with a $95\%$ statistical confidence.}
+	\label{tab:table_concat_all_range}
+\end{table*}
+
+\begin{table*}
+	\centering
+	\resizebox{0.9\textwidth}{!}{%
+	\csvreader[tabular=|l|l|,
+	    table head=\hline Group & 300 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_flowdecode_300.csv}{Name=\Name,Accuracy=\Accuracy}%
+	{\Name & \Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 400 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_flowdecode_400.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 600 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_flowdecode_600.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 1200 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_flowdecode_1200.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 2400 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_flowdecode_2400.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 3600 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_flowdecode_3600.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline 4800 ms.\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_flowdecode_4800.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	}
+	\caption[Average accuracy over all textures, averaged over exposure times, using the flow decode layer]{Average accuracy over all textures, averaged over exposure times, using the flow decode layer. Each texture accuracy includes a margin of error with a $95\%$ statistical confidence.}
+	\label{tab:table_flowdecode_all}
+\end{table*}
+
+\begin{table*}
+	\centering
+	\resizebox{0.65\textwidth}{!}{%
+	\csvreader[tabular=|l|l|,
+	    table head=\hline Group & Short (300-600 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_flowdecode_short.csv}{Name=\Name,Accuracy=\Accuracy}%
+	{\Name & \Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline Long (1200-4800 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_flowdecode_long.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	\csvreader[tabular=|l|,
+	    table head=\hline All (300-4800 ms.)\\\hline\hline,
+	    late after line=\\\hline]%
+	{tables/all_textures_avg_flowdecode_all.csv}{Accuracy=\Accuracy}%
+	{\Accuracy}%
+	}
+	\caption[Average accuracy over all textures, averaged over a range of exposure times, using the flow decode layer]{Average accuracy over all textures, averaged over a range of exposure times, using the flow decode layer. Each texture accuracy includes a margin of error with a $95\%$ statistical confidence.}
+	\label{tab:table_flowdecode_all_range}
+\end{table*}
+\clearpage

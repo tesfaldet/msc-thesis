@@ -1,0 +1,35 @@
+\section{Experimental procedure}
+Provided here are the experimental details of the user study
+using Amazon Mechanical Turk (AMT). Experimental trials were
+grouped into batches of Human Intelligence Tasks (HITs) for
+users to complete. Each HIT consisted of 59 pairwise
+comparisons between a synthesized dynamic texture and its target.
+Users were asked to choose which texture appeared more realistic
+after viewing each texture independently for an exposure time (in seconds) 
+sampled randomly from the set \{0.3, 0.4, 0.6, 1.2, 2.4, 3.6, 4.8\}.
+Note that 12 frames of the dynamic texture corresponds to 1.2 seconds, \ie, 10 frames per second.
+Before viewing a dynamic texture, a centred dot is flashed twice to
+indicate to the user where to look (left or right).
+To prepare users for the task, the first three comparisons 
+were used for warm-up, exposing them to the shortest (0.3s), 
+median (1.2s), and longest (4.8s) durations.
+To prevent spamming and bias, the experiment was constrained as 
+follows:
+\begin{enumerate}
+	\item Users could make a choice only after both dynamic textures were shown;
+	\item The next texture comparison could only be made after a decision was made for the current comparison;
+	\item A choice could not be changed after the next pair of dynamic textures were shown;
+	\item Users were each restricted to a single HIT.
+\end{enumerate}
+Obvious unrealistic dynamic textures were synthesized by 
+terminating synthesis early (100 iterations) and were used as sentinel tests. \todomatthew{maybe provide some examples?}
+Three of the 59 pairwise comparisons were sentinels and results from
+users which gave incorrect answers on any of the sentinel
+comparisons were not used. The left-right order of textures within a pair,
+display order within a pair, and order of pairs within a HIT, were randomized.
+An example of a HIT is shown in a video included with the supplemental material: \path{HIT_example.mp4}.
+
+Users were paid \$2 USD per HIT, and were required to have at least
+a 98\% HIT approval rating, greater than or equal to 5000 HITs
+approved, and to be residing in the US. Results were collected from 200 unique 
+users to evaluate the final model (which uses the ``Concat layer'') and another 200 to evaluate the baseline model (which uses the ``Flow decode layer'').

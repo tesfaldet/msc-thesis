@@ -1,0 +1,4 @@
+Name,Accuracy,Sample size
+Regular \& Near-regular,0.821$\pm$0.033,520.0
+Irregular,0.875$\pm$0.015,1902.0
+Stochastic \& Near-stochastic,0.717$\pm$0.01,7277.0

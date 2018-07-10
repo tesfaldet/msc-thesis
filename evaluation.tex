@@ -1,4 +1,4 @@
-\chapter{Evaluation \todomatthew{unfinished}}\label{chap:evaluation}
+\chapter{Evaluation}\label{chap:evaluation}
 
 The goal of (dynamic) texture synthesis is to generate 
 samples that are indistinguishable from the real input target
@@ -39,10 +39,10 @@ the results.
 Fig.\ \ref{fig:successes} shows some example success cases with the
 two-stream method where appearance and dynamics characteristics from the
 target are reliably preserved in the synthesized result. The
-upward motion and flickering appearance of \path{fireplace_1}, the outward
+upward fiery motion and flickering appearance of \path{fireplace_1}, the outward
 motion of the explosive splash of \path{lava},
 the wispy fluid dynamics of \path{smoke_1}, the translating god rays and
-flowing vegetation of \path{underwater_vegetation_1}, and the downward 
+flowing vegetation in \path{underwater_vegetation_1}, and the downward 
 rippling flow of \path{water_3}.
 
 \input{fig_successes}
@@ -160,7 +160,7 @@ realism of the synthesized dynamic textures.
 Similar to previous image synthesis work (\eg, \cite{chen2017}), 
 a perceptual experiment was conducted with human observers to 
 quantitatively evaluate the synthesis results.
-A forced-choice evaluation was employed on Amazon Mechanical
+A two-way alternative forced-choice (2AFC) evaluation was employed on Amazon Mechanical
 Turk (AMT) with 200 different users. Each user performed 59
 pairwise comparisons between a synthesized dynamic texture and 
 its target.
@@ -196,6 +196,8 @@ of $50\%$, indicating that users were unable to differentiate
 between the real and generated textures and higher accuracy 
 indicating less convincing textures.
 
+\input{fig_pairwise_alltextures}
+
 The results clearly show that the use of the concatenation 
 layer's activations is far more effective than the flow decode 
 layer.
@@ -223,7 +225,7 @@ with translating clouds in the sky).
 Results based on these groupings can be seen in
 Fig.\ \ref{fig:pairwise_grouped}.
 
-\input{fig_pairwise_alltextures}
+\input{fig_pairwise_grouped}
 
 A full breakdown of the user study results by dynamic texture and 
 grouping can be found in the appendix. \todomatthew{include tables in appendix}
@@ -249,8 +251,6 @@ average accuracies of $53.8\% \pm 7.4\%$ and
 $55.6\% \pm 7.4\%$, respectively, making them both 
 statistically indistinguishable from real.
 
-\input{fig_pairwise_grouped}
-
 \subsubsection{Dynamics-based analysis}
 
 In terms of dynamics, the user study showed that textures with
@@ -275,7 +275,7 @@ This was evident in the user study where the best-performing
 textures typically consisted of a stochastic or
 near-stochastic appearance with spatially-consistent 
 dynamics.
-In contrast the worst-performing textures consisted of
+In contrast, the worst-performing textures consisted of
 regular, near-regular, or irregular appearance with
 spatially-inconsistent dynamics.
 
