@@ -1,54 +1,146 @@
-\chapter{Related work \todomatthew{unfinished}} \label{chap:related_work}
+\chapter{Background}\label{chap:background}
 
-There are two general approaches that have dominated the texture
+This chapter aims to summarize the relevant theory and mathematics of
+convolutional networks,
+static and dynamic texture synthesis, image style transfer, and representations of dynamics so as to provide sufficient
+background information for the following chapters. Research
+related to this thesis is covered simultaneously.
+
+\section{Convolutional networks}
+
+A convolutional network (ConvNet) is a feed-forward computational graph of processing nodes, commonly used in analyzing visual imagery. It is a class of artificial neural networks (ANNs), which are computational systems vaguely inspired by the biological neural networks that constitute animal brains. ConvNets perform tasks (\eg, object classification) by processing an input, $\mathbf{X} \in \mathbb{R}^{H_x \times W_x \times C_x}$, in a feed-forward manner via a series of linear and non-linear transformations and producing an output, $\mathbf{Y} \in \mathbb{R}^{H_y \times W_y \times C_y}$, relevant to the task (such as the class of an object). Here $H_\ast \times W_\ast$ represents spatial dimensions and $C_\ast$ represents the  channel dimension. Each non-linear transformation acts as a point of demarcation in the network known as a \emph{layer}. ConvNets typically consist of multiple layers, each containing a collection of nodes called \emph{neurons}. At each spatial-channel location of the input to a layer, a neuron computes local non-linear transformations, \eg, $\sigma(\mathbf{x}) = \max{(0, \phi(\mathbf{x}))}$ (known as the \emph{rectified linear unit} or ReLU \cite{nair2010rectified}). At a single location of the input, $\mathbf{x} \equiv (x, y, z)$, the non-linear transformation performed by this neuron produces an output called an \emph{activation} or \emph{feature}, $\sigma(\mathbf{x}) \in \mathbb{R}$. The set of activations produced by a neuron at every location of the input is known as an \emph{activation map} or \emph{feature map}, $\sigma \in \mathbb{R}^{H_\sigma \times W_\sigma \times C_\sigma}$. At the $l$-th layer of the network and for each location $\mathbf{x}$ of the input map, the input to each neuron is the weighted linear combination of activations from neighbouring neurons at the previous layer, $l-1$:
+\begin{equation}
+	\begin{aligned}
+		\phi^l(\mathbf{x}) &= \left(\mathbf{w}^l * \sigma^{l-1}(\mathbf{x})\right) + b^l\\
+		&= \left(\sum_{(i, j, k) \in \Omega} \mathbf{w}^l(i, j, k) \sigma^{l-1}(x - i, y - j, z - k)\right) + b^l\ ,
+	\end{aligned}
+\end{equation}
+where $\mathbf{w}^l$ are the \emph{weights} (or \emph{filter}) of the neuron applied to the input $\sigma^{l-1}(\mathbf{x})$, $\Omega$ is a spatial-channel neighbourhood centered about $\mathbf{x}$, $b^l$ is an offset term known as the \emph{bias}, and $\ast$ represents the \emph{convolution} (or \emph{filtering}) operator. Colloquially, the term ``convolution'' is often used to describe the combined process of convolving over an input and subsequently computing its activation. Convolution is typically done in a sliding window fashion across the entire input. At the base of the ConvNet, inputs are typically images (\eg, RGB image $\mathbf{X} \in \mathbb{R}^{H_x \times W_x \times 3}$), while inputs at intermediate layers are activation maps (\eg, $\sigma \in \mathbb{R}^{H_\sigma \times W_\sigma \times C_\sigma}$). 
+
+ConvNets ``learn'' to perform tasks through an iterative process called \emph{training}. At each iteration, an input is fed through the network to produce an output which is subsequently evaluated against the ``true'' output for the given input. This evaluation is known as the \emph{loss function} and represents the network's performance on the task. Implicitly, it also represents the objective the network must achieve (\eg, minimizing classification error). Starting from the loss, the network \emph{backpropagates} adjustments to its weights and biases at each layer via the gradient of the loss with respect to the weights and biases at that layer. After a suitable amount of training iterations, this \emph{gradient descent} process will have adjusted the weights and biases of the network such that it is able to achieve its objective in minimizing the loss.
+
+\section{Parametric texture synthesis}
+
+To review, texture synthesis is the process of algorithmically constructing a texture that
+matches or extends a given source texture by taking advantage of its structural 
+content. There are two general approaches that have dominated the texture
 synthesis literature: non-parametric sampling approaches that
 synthesize a texture by sampling pixels of a given source texture
 \cite{efros1999,kwatra2003graphcut,schodl2000,wei2000}, and 
-statistical parametric models.
+statistical parametric models that aim to synthesize a texture by sampling
+from a parameterized model of the source texture.
 As the proposed approach is an instance of a parametric model, this thesis 
 will focus on these parametric approaches.
 
 The statistical characterization of visual textures was introduced
 in the seminal work of Julesz \cite{julesz1962}.
 He conjectured that particular statistics of pixel intensities
-were sufficient to partition spatial textures into metameric (\ie,
-perceptually indistinguishable) classes.
-Later work leveraged this notion for texture synthesis
+were sufficient to partition textures into metameric (\ie,
+perceptually indistinguishable) classes. 
+Later work leveraged this notion for static texture synthesis
 \cite{heeger1995pyramid,portilla2000parametric}.
 In particular, inspired by models of the early stages of visual 
 processing, statistics of (handcrafted) multi-scale oriented filter 
 responses were used to optimize an initial noise pattern 
 to match the filter response statistics of an input texture.
+
 More recently, Gatys \etal \cite{gatys2015} demonstrated
-impressive results by replacing the linear filter bank with a
-ConvNet that, in effect, served as a proxy for the ventral visual
-processing stream.
-Textures are modelled in terms of the correlations between filter 
-responses within several layers of the network.
-In subsequent work, this texture model was used in image style
+impressive results by replacing the linear filter bank with the VGG-19
+\cite{simonyan2014very} ConvNet pre-trained on the ImageNet \cite{russakovsky2015} dataset for the task of object
+recognition. This ConvNet, in effect, served as a proxy for the ventral visual
+processing stream. 
+Textures were modelled in terms of the normalized correlations between activation maps within several layers of the network.
+
+\subsection{Texture synthesis using a ConvNet}
+
+Since the two-stream approach to dynamic texture synthesis proposed by this thesis is an extension of the above texture 
+synthesis model, it is useful to describe their approach here. Given a target texture as input,
+let $\mathbf{A}^{l} \in \mathbb{R}^{N_l\times M_l}$
+be its row-vectorized activation maps at the $l$-th layer of VGG-19, where $N_l$ and $M_l$ denote the number of
+activation maps and the number of spatial locations,
+respectively. The normalized correlations between activation maps
+within a layer are encapsulated by a Gram matrix,
+$\mathbf{G}^l \in \mathbb{R}^{N_l \times N_l}$, whose entries are given by:
+\begin{equation}
+	G_{ij}^l = \frac{1}{N_l M_l} \sum_{k=1}^{M_l} A_{ik}^l A_{jk}^l\ ,
+\end{equation}
+where $A_{ik}^l$ denotes the activation of feature $i$ at
+location $k$ in layer $l$ on the target texture.
+Given a synthesized texture as input, similarly, let its row-vectorized activation maps
+be $\hat{\mathbf{A}}^{l} \in \mathbb{R}^{N_l\times M_l}$ and its normalized
+activation map correlations be the Gram matrix, $\hat{\mathbf{G}}^l \in \mathbb{R}^{N_l \times N_l}$, whose entries are given by:
+\begin{equation}
+	\hat{G}_{ij}^l = \frac{1}{N_l M_l} \sum_{k=1}^{M_l} \hat{A}_{ik}^l \hat{A}_{jk}^l\ .
+\end{equation}
+The final objective is defined as the average of the mean squared error between
+the Gram matrices of the target texture and that of the synthesized texture:
+\begin{equation}
+   \mathcal{L} = \frac{1}{L} \sum_{l} \Vert \mathbf{G}^l - \hat{\mathbf{G}}^l \Vert^2_F\ ,
+   \label{eq:tex_loss}
+\end{equation}
+where $L$ is the number of VGG-19 layers used when computing Gram matrices
+and $\Vert \cdot \Vert_F$ is the Frobenius norm. Gram matrices are computed on
+layers \emph{conv1\_1}, \emph{pool1}, \emph{pool2}, \emph{pool3}, and \emph{pool4}.
+
+Before synthesizing a texture, an initial forward pass through VGG-19 is
+performed with the target texture as input. The target texture's Gram matrices
+across various layers in the network are computed and saved as objectives for
+the synthesis process. Then the synthesized texture is initialized with IID
+Gaussian noise. Finally, with the weights of VGG-19 kept fixed, the final
+objective (Eq.\ \ref{eq:tex_loss}) is minimized with respect to the synthesized texture. With each
+iteration of the optimization process, the synthesized texture is updated to appear increasingly
+perceptually similar to the target texture. An overview of this process is presented in Fig.\ \ref{fig:vgg_texture_synthesis}.
+\clearpage
+\input{fig_vgg_texture_synthesis}
+\clearpage
+
+\subsection{The Gram matrix as a texture metric}
+
+Before explaining the Gram matrix as a suitable texture metric, it is necessary to first understand the mathematics behind it. Simply, the Gram matrix of a set of vectors $v_1, \dots , v_n$ in an inner product space is the Hermitian matrix of inner products, whose entries are given by $G_{ij} = \langle v_i, v_j \rangle$ (a Hermitian matrix is a complex square matrix, $A$, that is equal to its own conjugate transpose, \ie, $A = \overline{A^\top}$). Since the inner product space of activation maps is over the real number field, the Gram matrix is also a symmetric matrix. Essentially, the Gram matrix is a covariance matrix describing which of its input vectors are correlated with each other. In the case of Gatys \etal's texture synthesis with a ConvNet, the set of vectors used to compute the Gram matrix are row-vectorized activation maps (Fig.\ \ref{fig:gram_matrix}).
+\input{fig_gram_matrix}
+
+In texture synthesis, the Gram matrix measures the amount that co-located features tend to activate together. By computing Gram matrices across several layers, a stationary, multi-scale representation of the input image in terms of its texture information is achieved.
+
+\subsection{Image style transfer}
+
+In subsequent work, Gatys \etal's texture model was used in image style
 transfer \cite{gatys2016image}, where the style of one image was
 combined with the image content of another to produce a new image.
-Ruder \etal \cite{ruder2016} extended this model to video by using
+This was achieved by appending an additional term to Eq.\ \ref{eq:tex_loss}
+that enforced the synthesized texture to match the semantic content of the given content image. Specifically,
+\begin{equation}
+   \mathcal{L} = \frac{1}{L_{style}} \sum_{l} \Vert \mathbf{G}^l - \hat{\mathbf{G}}^l \Vert^2_F\ + \frac{1}{L_{content}} \sum_{l} \Vert \mathbf{A}^l - \hat{\mathbf{A}}^l \Vert^2_F\ ,
+   \label{eq:styletransfer_loss}
+\end{equation}
+where $L_{style}$ and $L_{content}$ are the number of VGG-19 layers used when computing Gram matrices and activation maps, respectively. Gram matrices are computed on the same layers as before, and activation maps are computed on layer \emph{conv4\_2}.
+
+To briefly review, the Gram matrix of activation maps conveys a notion of texture, or ``style'', describing which features tend to activate together. Although the style of the style image is preserved, the global arrangement of its features are not. By including the objective of matching the features of the content image, however, the global arrangement of semantic image content from the content image is preserved. This results in a synthesized image that contains the content of the content image and the style of the style image.
+
+\section{Dynamic texture synthesis}
+
+Dynamic textures extend from static textures with an additional temporal dimension. The stationarity of spatial statistics of static textures also applies to the temporal domain of dynamic textures.
+
+Unlike static texture synthesis, dynamic texture synthesis has not been as deeply explored. Somewhat related to dynamic texture synthesis, Ruder \etal \cite{ruder2016} extended the image style transfer model to video by using
 optical flow to enforce temporal consistency of the
-resulting imagery.
+resulting imagery. Although their model produced a video output, their core approach focused on an analysis of static texture on a per-frame basis. This is not to be confused with dynamic texture synthesis, which requires an analysis of \emph{dynamic} textures across space \emph{and time}.
 
 Variants of linear autoregressive models have been studied
-\cite{szummer1996,doretto2003} that jointly model appearance and
-dynamics of the spatiotemporal pattern.
+\cite{szummer1996,doretto2003} that jointly model the appearance and
+dynamics of spatiotemporal patterns.
 More recent work has considered ConvNets as a basis for modelling 
 dynamic textures.
 Xie \etal \cite{xie2017synthesizing} proposed a spatiotemporal
 generative model where each dynamic texture is modelled as a random
 field defined by multiscale, spatiotemporal ConvNet filter responses
 and dynamic textures are realized by sampling the model.
-Unlike my current work, which assumes pretrained fixed networks,
+Unlike the approach proposed by this thesis, which assumes pre-trained fixed networks,
 this approach requires the ConvNet weights to be trained using the
 input texture prior to synthesis.
 
-A recent preprint \cite{funke2017} described preliminary 
+A recent preprint from Funke \etal \cite{funke2017} described preliminary 
 results extending the framework of Gatys \etal \cite{gatys2015} 
 to model and  synthesize dynamic textures by computing a Gram 
-matrix of filter activations over a small temporal window.
+matrix of filter activations over a small spatiotemporal window.
 In contrast, the proposed two-stream filtering architecture is more 
 expressive as the dynamics stream is specifically tuned to 
 spatiotemporal dynamics.
@@ -59,13 +151,31 @@ transferred to the appearance of another to generate an
 entirely new dynamic texture.
 This work is the first to demonstrate this form of style transfer.
 
-The recovery of optical flow from temporal imagery has long been
-studied in computer vision.
-Traditionally, it has been addressed by handcrafted approaches
-\eg, \cite{horn1981,lucas1981,revaud2015epicflow}.
-Recently, ConvNet approaches \cite{dosovitskiy2015,ranjan2017,ilg2017,yu2016}
-have been demonstrated as viable alternatives.
-Most closely related to my approach are energy models of visual
+
+\section{Representations of dynamics}
+
+Numerous representations of dynamics in temporal imagery have been explored, each with their own limitations and level of abstraction. Adapted from Derpanis' dissertation on the role of representation in the analysis of visual spacetime \cite{derpanis2010role}, Fig.\ \ref{fig:dynamics_representations} illustrates an organization of several extant representations of temporal imagery dynamics.
+\input{fig_dynamics_representations}
+At one extreme, no commitment to an abstraction is made, the raw signal is used directly (\eg, pointwise intensity and colour). This representation fails to leverage the rich underlying structure in the data. The remaining representations are discussed below.
+
+\subsection{Optical flow}
+
+At the other extreme of Fig.\ \ref{fig:dynamics_representations}, a two-dimensional (2D) vector field is used to represent the dynamics of the input temporal imagery. This vector field is known as \emph{optical flow}. It is used to represent the apparent motion of image pixels between two consecutive frames that is caused by the movement of objects or the camera. Each vector in the 2D vector field is a displacement vector consisting of a horizontal and vertical component, describing the movement of pixels from the first frame to the second. Fig.\ \ref{fig:optical_flow} provides a useful visualization of optical flow.
+\input{fig_optical_flow}
+The recovery of optical flow from temporal imagery has long been studied in computer vision. Traditionally, it has been addressed by handcrafted approaches \eg, \cite{horn1981,lucas1981,revaud2015epicflow}. Recently, ConvNet approaches have been demonstrated as viable alternatives \cite{dosovitskiy2015,ilg2017,ranjan2017,yu2016}.
+
+A limitation of optical flow is its over commitment to local translational motion, which only partially describes the dynamics one may encounter in the real world. Examples of dynamics optical flow would fail to capture include flickering, semi-transparent motion, and stochastic dynamics. These are dynamics typically existent in dynamic textures. One of the main causes of its failure is its dependency on assumptions like brightness constancy and local smoothness, which are generally difficult to justify for stochastic dynamics. Therefore, optical flow is not an optimal measure for representing the dynamics existent in dynamic textures.
+
+\subsection{Marginalized spacetime oriented energies}
+
+At the midpoint between the two extremes lies the representation of dynamics that aims to capture a distribution of measurements of spacetime orientations in the input temporal imagery. Unlike flow-based analyses which focus on the apparent motion (\ie translation) present in the data, measurements of spacetime orientations take a geometric and generalized approach in capturing \emph{spacetime structures}: oriented structures in visual spacetime that manifest themselves as motion or non-motion (\eg flickering, stochastic dynamics, etc.). This is visualized in Fig.\ \ref{fig:spacetime_structures} alongside their frequency-space counterparts. 
+\clearpage
+\input{fig_spacetime_structures}
+\clearpage
+
+Specifically, this thesis adopts the Marginalized Spacetime Oriented Energy (MSOE) approach of Derpanis \etal \cite{derpanis2010role} in representing the observed dynamics of a dynamic texture. This representation was successfully used for the task of dynamic texture recognition \cite{derpanis2012spacetime}; here it is used for the task of dynamic texture synthesis.
+
+Most closely related to this approach are energy models of visual
 motion \cite{adelson1985spatiotemporal,heeger1988,simoncelli1998,nishimoto2011,derpanis2012spacetime,konda2014}
 that have been motivated and studied in a variety of contexts,
 including computer vision, visual neuroscience, and visual
@@ -74,8 +184,75 @@ Given an input image sequence, these models consist of an
 alternating sequence of linear and non-linear operations that yield
 a distributed representation (\ie,  implicitly coded) of pixelwise
 optical flow.
-Here, an energy model motivates the
+Here, an MSOE model motivates the
 representation of observed dynamics which will then be encoded
 as a ConvNet. Significantly, a completely analytically-defined
 oriented energy ConvNet model provides the current state-of-the-art
 for the related task of dynamic texture recognition \cite{hadji2017}.
+
+
+In motion energy models, the velocity of image content (\ie, motion)
+is interpreted as a 3D orientation in the $x$-$y$-$t$
+spatiotemporal domain
+\cite{adelson1985spatiotemporal,fahle1981,heeger1988,simoncelli1998,watson1983}, previously defined as a spacetime structure.
+In the frequency domain, the signal energy of a translating
+pattern can be shown to lie on a plane through the origin
+where the slant of the plane is defined by the velocity of
+the pattern (Fig.\ \ref{fig:spacetime_structures}).
+Thus, motion energy models attempt to identify this 
+orientation-plane (and hence the pattern's velocity) via
+a set of image filtering operations.
+More generally,
+the constituent
+spacetime orientations for a spectrum of common
+visual patterns can serve as a basis for describing the temporal
+variation of an image sequence \cite{derpanis2012spacetime}.
+This observation suggests that motion energy models may form an
+ideal basis for the dynamics stream of the proposed dynamic texture synthesis ConvNet. As stated previously, the spacetime-oriented energy model (MSOE) proposed by Derpanis \etal \cite{derpanis2010role,derpanis2012spacetime} is used to motivate the network architecture. The MSOE model is reviewed here.
+
+\todomatthew{clean up redundant parts of MSOE review section in technical approach}
+Given input temporal imagery, $\mathbf{I} \in \mathbb{R}^{T \times H \times W}$ (time $\times$ height $\times$ width), a bank of oriented 3D
+filters, \eg, Gaussian third derivative filters $G_3 \in \mathbb{R}^{T \times H \times W}$, which are sensitive to a range of
+spatiotemporal orientations, are each applied:
+\begin{equation}
+	E_{\hat{\theta}} = G_{3_{\hat{\theta}}} \ast \mathbf{I}\ ,
+\end{equation}
+where $\ast$ denotes convolution, and $G_{3_{\hat{\theta}}}$ is a Gaussian third derivative filter oriented in the direction of the 3D unit vector $\hat{\theta}$ which lies along the filter's symmetry axis. Each of these filtering operations results in a spacetime volume of filter responses, $E_{\hat{\theta}}$.
+These filter responses are then rectified (squared) and
+pooled over local spacetime regions to make the responses robust
+to the phase of the input signal, \ie, robust to the
+alignment of the filter with the underlying image
+structure:
+\begin{equation}
+	\bar{E}_{\hat{\theta}} = \sum_{(x, y, t) \in \Omega}{{E_{\hat{\theta}}(x, y, t)}^2}\ .
+\end{equation}
+At this point, each oriented energy measurement is confounded with spatial orientation. Consequently, in cases where the 
+spatial image structure varies wildly about an otherwise coherent dynamic
+region, the responses of the bank of oriented filters will reflect this
+behaviour and thereby become dependent on spatial appearance; whereas, a description consisting purely 
+of pattern dynamics is sought.
+To remove this difficulty, the spatial orientation component of each filter is discounted via ``marginalization''. Specifically, filter responses consistent with the same temporal orientation (not necessarily the same spatial orientation), $\hat{\theta}_i$, are summed:
+\begin{equation}
+	E_{\hat{\mathbf{n}}} = \sum_{i = 1}^{N}{E_{\hat{\theta}_i}}\ ,
+	\label{eq:oriented_filter_2.8}
+\end{equation}
+where $\hat{\mathbf{n}}$ denotes the unit normal of the plane in frequency-space that the spacetime structures captured by these filters lie upon (implicitly describing a single temporal orientation), and $N$ denotes the number of these filters.
+For example, in the case where a spacetime structure is defined by the image velocity $(u, v)^\top$ (\ie, optical flow), the unit normal is given by $\hat{\mathbf{n}}=(u, v, 1)^\top / ||(u, v, 1)^\top||$.
+These responses provide a pixelwise distributed measure
+of which spacetime structures (discounting spatial information) are
+present in the input.
+However, these responses are confounded by local image
+contrast that makes 
+it difficult to determine
+whether a high response is indicative of the presence of
+a spacetime structure or simply due to high image
+contrast.
+To address this ambiguity, an $\textrm{L}_1$
+normalization is applied across oriented filter responses which
+results in a representation that is robust to local
+appearance variations but highly selective to 
+spacetime orientation:
+\begin{equation}
+	\hat{E}_{\hat{\mathbf{n}}_i} = \frac{E_{\hat{\mathbf{n}}_i}}{\sum_{j = 1}^{M}{E_{\hat{\mathbf{n}}_j}} + \epsilon} \ ,
+\end{equation}
+where $\hat{E}_{\hat{\mathbf{n}}_i}$ denotes an oriented filter response from Eq.\ \ref{eq:oriented_filter_2.8} corresponding to a plane in frequency-space with unit normal $\hat{\mathbf{n}}_i$.

@@ -1,7 +1,5 @@
 \chapter{Introduction}
 
-\section{Motivation}
-
 The natural world is rich in visual texture. While a precise definition of 
 texture remains to be found, most research consider it as visual patterns that 
 exhibit local spatial variations while maintaining global homogeneity, as shown in Fig.\ \ref{fig:texture}.
@@ -55,10 +53,10 @@ to preserve the semantic content of another image. This can be considered as a
 texture transfer problem, as previously demonstrated by Efros \etal \cite{efros2001image} where they transferred a given texture to another image by stitching together small patches of the given texture while conforming to the luminance of the other image. Although the simplicity of their approach was attractive, it failed for highly structured textures due to patch boundary inconsistencies, limiting the selection of acceptable textures. 
 As a follow-up to \cite{gatys2015}, Gatys \etal modified their previous ConvNet to support texture transfer by including an additional objective that enforced the synthesized texture to match the semantic content of a given image, naming the process \emph{image style transfer} \cite{gatys2016image}. Unlike the patch-based method of Efros \etal \cite{efros2001image}, Gatys \etal's \cite{gatys2016image} approach of using a ConvNet was more robust to textures with long-range consistencies.
 
-This work extends the ConvNet model of Gatys \etal \cite{gatys2016image} for texture synthesis. Specifically, the focus of this work is on the synthesis of dynamic texture 
+Motivated by the ConvNet model of Gatys \etal \cite{gatys2016image} for texture synthesis, the focus of this work is on the synthesis of dynamic texture 
 samples based on a single exemplar through the use of ConvNets.
 
-\section{Outline of thesis}
+\section{Summary of thesis}
 \todomatthew{provide chapter-by-chapter outline}
 
 Many common dynamic textures are naturally described by the ensemble of 
