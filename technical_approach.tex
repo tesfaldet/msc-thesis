@@ -7,8 +7,8 @@ variations between frames.
 Each stream consists of a ConvNet whose activation 
 statistics are used to characterize the dynamic texture.
 Synthesizing a dynamic texture is formulated as an optimization 
-problem with the objective of matching these activation 
-statistics.
+problem with the objective of matching activation 
+statistics between the target and synthesized textures.
 The dynamic texture synthesis approach is summarized in Fig.\ \ref{fig:architecture}
 and the individual pieces are described in turn in the
 following sections.
@@ -18,13 +18,12 @@ following sections.
 \section{Texture model: Appearance stream}
 
 The appearance stream follows the spatial texture model
-introduced by Gatys \etal \cite{gatys2015} which was reviewed in the previous chapter \todomatthew{talk about Gatys style transfer in related work}.
-\todomatthew{talk about texture synthesis in related work}
-To briefly review, the key idea is that feature auto-correlations (\ie, normalized \emph{Gram} matrices) in a 
+introduced by Gatys \etal \cite{gatys2015} which was summarized in the previous chapter (Sec.\ \ref{sec:texture_synthesis_using_a_convnet}).
+To briefly review, the key idea is that correlations between activation maps (\ie, normalized Gram matrices) in a 
 ConvNet trained for 
 object recognition (\eg, VGG-19 \cite{simonyan2014very}) 
 capture texture appearance.
-The same publicly available normalized VGG-19 ConvNet \cite{simonyan2014very} used by Gatys \etal \cite{gatys2015} is used here.
+The same publicly available normalized VGG-19 ConvNet \cite{simonyan2014very} used by Gatys \etal \cite{gatys2015} is used here. The proposed appearance stream utilizes this model by simply applying it indepedently to each frame of the synthesized and target texture.
 
 \subsection{Target texture appearance}
 
@@ -59,8 +58,7 @@ location $k$ in layer $l$ on the synthesized frame $t$.
 
 \subsection{Appearance loss}
 
-The appearance loss, $\mathcal{L}_\text{appearance}$, is then 
-defined as the temporal average of the mean squared error between
+The appearance loss, $\mathcal{L}_\text{appearance}$, is defined as the temporal average of the mean squared error between
 the Gram matrix of the input texture and that of the synthesized
 texture computed at each frame:
 \begin{equation}
@@ -76,7 +74,7 @@ following layers:
 
 \section{Texture model: Dynamics stream}
 
-There are three primary goals in designing the dynamics stream ConvNet.
+Parallel to the appearance stream ConvNet is a ConvNet designed for capturing texture dynamics. There are three primary goals in designing this dynamics stream.
 \begin{enumerate}
 	\item The activations of the ConvNet must represent the temporal variation of the input pattern.
 	\item The activations should be largely invariant to the appearance (\ie, spatial content) of the images (which should be characterized by the appearance stream described above).
@@ -85,71 +83,29 @@ There are three primary goals in designing the dynamics stream ConvNet.
 
 By analogy to the appearance stream, an obvious choice
 is a ConvNet architecture suited for computing
-optical flow \todomatthew{talk about optical flow in related work} (\eg, \cite{dosovitskiy2015,ilg2017}) which
+optical flow (\eg, \cite{dosovitskiy2015,ilg2017}) which
 is naturally differentiable.
 However, with most such models it is unclear how invariant
 their layers are to appearance.
 Instead, a novel network architecture is proposed which is
 motivated by the spacetime-oriented energy model
-\cite{derpanis2012spacetime,simoncelli1998}. \todomatthew{talk about SOE for texture recognition in related work?}
+\cite{derpanis2012spacetime,simoncelli1998}.
 
 \subsection{Review: Marginalized spacetime oriented energies}
 
-In motion energy models, the velocity of image content (\ie, motion)
-is interpreted as a 3D orientation in the $x$-$y$-$t$
-spatiotemporal domain
-\cite{adelson1985spatiotemporal,fahle1981,heeger1988,simoncelli1998,watson1983}. \todomatthew{include figure of motion in xyt}
-In the frequency domain, the signal energy of a translating
-pattern can be shown to lie on a plane through the origin
-where the slant of the plane is defined by the velocity of
-the  pattern. \todomatthew{include figure of motion in frequency space}
-Thus, motion energy models attempt to identify this 
-orientation-plane (and hence the pattern's velocity) via
-a set of image filtering operations.
-More generally,
-the constituent
+ This section is only intended to briefly review the aspects of the Marginalized Spacetime Oriented Energies (MSOE) model \cite{derpanis2012spacetime} that are most relevant to the following section; a more thorough overview can be found in the previous chapter (Sec.\ \ref{sec:msoe}).
+
+A significant limitation of optical flow is its over commitment to local translational motion, which only partially describes the dynamics one may encounter in the real world, and thus in dynamic textures. In response, Derpanis \etal \cite{derpanis2012spacetime} showed that the constituent
 spacetime orientations for a spectrum of common
 visual patterns can serve as a basis for describing the temporal
-variation of an image sequence \cite{derpanis2012spacetime}.
-This observation suggests that motion energy models may form an
-ideal basis for the dynamics stream. Specifically, the spacetime-oriented energy models proposed by Derpanis \etal \cite{derpanis2012spacetime}
-and Simoncelli \etal \cite{simoncelli1998} are used to motivate the
-network architecture, which is briefly reviewed here; 
-see Chapter \ref{chap:background} \todomatthew{talk about Derpanis' MSOE in related work} for a more in-depth description.
+variation of an image sequence. Their observation motivated a motion oriented-energy approach to representing dynamics, rather than a flow-based approach. By constructing a set of 3D oriented filters designed to capture spacetime structures beyond just translational motion, they demonstrated a successful application of the approach for dynamic texture recognition \cite{derpanis2012spacetime}.
 
-Given an input video, 
-a bank of oriented 3D
-filters, which are sensitive to a range of
-spatiotemporal orientations, are applied.
-These filter activations are then rectified (squared) and
-pooled over local regions to make the responses robust
-to the phase of the input signal, \ie, robust to the
-alignment of the filter with the underlying image
-structure. At this point, each oriented energy measurement is confounded with spatial orientation. Consequently, in cases where the 
-spatial image structure varies wildly about an otherwise coherent dynamic
-region, the responses of the bank of oriented filters will reflect this
-behaviour and thereby become dependent on spatial appearance; whereas, a description consisting purely 
-of pattern dynamics is sought.
-To remove this difficulty, the spatial orientation component of each filter is discounted via ``marginalization''. Specifically, filter activations consistent with the same temporal orientation (not necessarily the same spatial orientation) are summed. \todomatthew{clarify with Kosta}
-These responses provide a pixelwise distributed measure
-of which orientations (frequency domain planes) are
-present in the input.
-However, these responses are confounded by local image
-contrast that makes 
-it difficult to determine
-whether a high response is indicative of the presence of
-a spacetime orientation or simply due to high image
-contrast.
-To address this ambiguity, an $\textrm{L}_1$
-normalization is applied across orientation responses which
-results in a representation that is robust to local
-appearance variations but highly selective to 
-spacetime orientation.
+Motion energy models may form an ideal basis for the dynamics stream of the proposed dynamic texture synthesis ConvNet. As such, the MSOE model proposed by Derpanis \etal \cite{derpanis2012spacetime} is used to motivate the network architecture.
 
 \subsection{ConvNet architecture}
 
-Using this model as the basis, the following fully convolutional 
-network \cite{shelhamer2017} \todomatthew{talk about this in related work?} is proposed.
+Using this model as the basis, the following convolutional 
+network is proposed.
 The ConvNet input is a pair of temporally consecutive greyscale images, $\mathbf{I} \in \mathbb{R}^{T \times H \times W \times C}$ ($\text{time} \times \text{height} \times \text{width} \times \text{channels}$), where $C=1$ and $T=2$. From here forth, the channel dimension ($C$) will be omitted for simplicity.
 Each input pair is first normalized to have zero-mean and unit
 variance (\ie, contrast normalization or ``instance normalization'' \cite{ulyanov2017}), as follows:
@@ -157,10 +113,10 @@ variance (\ie, contrast normalization or ``instance normalization'' \cite{ulyano
 	\mathbf{I}_N = \frac{\mathbf{I} - \mu}{\sigma + \epsilon}\ ,
 \end{equation}
 where $\mu$ is the average pixel value of the input pair, $\sigma$ is the standard deviation of the input pair, and $\epsilon$ is a small value to prevent dividing by zero.
-This step provides a level of invariance \todomatthew{Rick: Given that you're using normalized, bandpass filters, is this preprocessing necessary?} to overall brightness and contrast, \ie, global additive and
-multiplicative signal variations, easing the training process of the ConvNet. \todomatthew{maybe talk about how it relates to batchnorm?}
+This step provides a level of invariance to overall brightness and contrast (\ie, global additive and
+multiplicative signal variations) as well as ease the training process of the ConvNet. In contrast, hand-crafted approaches (\eg, \cite{derpanis2012spacetime}) opt to normalize the filters instead. This is not the case with the filters learned by the ConvNet.
 The first layer consists of a 3D convolution over the normalized input pair with a bank of 32 3D filters of size $2 \times 11 \times 11$
-($\text{time} \times \text{height} \times \text{width}$), resulting in an output of spacetime oriented energy measurements, \todomatthew{Rick: Really only 2 taps in time?}
+($\text{time} \times \text{height} \times \text{width}$), resulting in an output of spacetime oriented energy measurements:
 \begin{equation}
 	E_F(\mathbf{x}) = F * \mathbf{I}_N(\mathbf{x})\ ,
 \end{equation}
@@ -180,7 +136,7 @@ with the same orientation:
 \end{equation}
 where  $E_G$ denotes the response of filter $G$ (of size $1 \times 1$) after a convolution.
 Finally, to remove local contrast dependence, an
-$\text{L}_1$ divisive normalization is applied to each spatial location: \todomatthew{explain why this is not redundant due to contrast norm on input}
+$\text{L}_1$ divisive normalization is applied to each spatial location:
 \begin{equation}
 	\bar{E}_G(\mathbf{x}) = \frac{E_G(\mathbf{x})}{\Vert E_G(\mathbf{x}) \Vert_1 + \epsilon}\ ,
 \end{equation}
@@ -194,7 +150,7 @@ with the same spacetime-oriented energy model and then
 bilinearly upsampled to the original resolution and
 concatenated:
 \begin{equation}
-	E(\mathbf{x}) = \left( \bar{E}_G(\mathbf{x}) \Vert \bar{E}_G(\mathbf{x}_{\downarrow\times2})_{\uparrow\times2} \Vert \cdots \Vert \bar{E}_G(\mathbf{x}_{\downarrow\times2^{k-1}})_{\uparrow\times2^{k-1}} \Vert \bar{E}_G(\mathbf{x}_{\downarrow\times2^k})_{\uparrow\times2^k} \right)\ ,
+	E(\mathbf{x}) = \left( \bar{E}_G(\mathbf{x}) , \bar{E}_G(\mathbf{x}_{\downarrow\times2})_{\uparrow\times2} , \dots , \bar{E}_G(\mathbf{x}_{\downarrow\times2^{k-1}})_{\uparrow\times2^{k-1}} , \bar{E}_G(\mathbf{x}_{\downarrow\times2^k})_{\uparrow\times2^k} \right)\ ,
 \end{equation}
 where $(\cdot)_{\downarrow \times n}$ and $(\cdot)_{\uparrow \times n}$ denote an $n$-times downsample and upsample, respectively, and $k+1$ denotes the number of pyramid levels. This final output of the dynamics encoding stage is named the ``concatenation layer''.
 
@@ -210,7 +166,7 @@ layers are added that take the concatenated distributed
 representation from the concatenation layer and apply a $3\times 3$ convolution
 (with 64 filters), ReLU activation, and a $1\times 1$
 convolution (with 2 filters) that yields a two channel
-output encoding the optical flow directly. \todomatthew{introduce optical flow in related work as background}
+output encoding the optical flow directly.
 The proposed architecture is illustrated in
 Fig.\ \ref{fig:MSOE}.
 
@@ -221,18 +177,17 @@ endpoint error (aEPE) flow metric (\ie, $\text{L}_2$
 norm) is used between the predicted flow and the ground truth
 flow as the loss.
 Since no large-scale optical flow dataset exists that captures
-natural imagery with groundtruth flow, a new dataset had to be made. Videos
+natural imagery with groundtruth flow, the assembly of a new dataset was necessary. Videos
 from an unlabeled video dataset are fed through an existing flow
 estimator to produce optical
 flow ``semi-groundtruths'' for training,
 \cf \cite{tran2016}.
 For the unlabeled video dataset, the UCF101
-dataset for action recognition \cite{soomro2012ucf101} is used as it contains complex movements of natural imagery at desirably slow speeds \todomatthew{histogram of flow magnitudes}, similar to the expected pattern velocity of the dynamic textures used in this work. The synthetic Flying Chairs dataset \cite{dosovitskiy2015} was also considered as it contained ground truth optical flow, however, training the dynamics stream on this dataset reduced the overall quality of synthesized dynamic textures. This can be explained by the less complex and faster movement of the rigid objects in Flying Chairs, which is undesirable for estimating motion of dynamic textures.
-For producing the optical flow semi-groundtruths, a ConvNet-based model, EpicFlow \cite{revaud2015epicflow}, is used for 
-its superior performance over traditional handcrafted approaches and tendency
-to produce smooth predictions---ideal training data for the dynamics stream. \todomatthew{talk about why EpicFlow and not FlowNet?}
+dataset for action recognition \cite{soomro2012ucf101} is used as it contains a wide variety of complex movements of natural imagery. The synthetic Flying Chairs dataset \cite{dosovitskiy2015} was also considered as it contained ground truth optical flow; however, training the dynamics stream on this dataset reduced the overall quality of synthesized dynamic textures. This can be explained by the limited motions exhibited by the rigid objects in Flying Chairs, which is undesirable for estimating motion of dynamic textures.
+For producing the optical flow groundtruth, the EpicFlow \cite{revaud2015epicflow} model is used for 
+its exceptional performance on optical flow prediction.
 
-The distribution of movement directions \todomatthew{radial histogram of flow for ucf101} in UCF101 is biased to left-to-right and right-to-left motions, which is undesirable as dynamic textures are not necessarily restricted to certain directions of motion. To combat this dataset bias, geometric data augmentations \todomatthew{provide geo augmentations} similar to those used by FlowNet \cite{dosovitskiy2015} are used to equalize the distribution of movement directions in the generated dataset. Additionally, photometric data augmentations \todomatthew{provide photo augmentations} similar to those used by FlowNet \cite{dosovitskiy2015} are used here as well. The aEPE loss is optimized using Adam \cite{kingma2017}.
+The distribution of movement directions in UCF101 is biased to left-to-right and right-to-left motions, which is undesirable as dynamic textures are not necessarily restricted to certain directions of motion. To combat this dataset bias, geometric data augmentations \todomatthew{provide geo augmentations} similar to those used by FlowNet \cite{dosovitskiy2015} are used to equalize the distribution of movement directions in the generated dataset. Additionally, photometric data augmentations \todomatthew{provide photo augmentations} similar to those used by FlowNet \cite{dosovitskiy2015} are used here as well. The aEPE loss is optimized using Adam \cite{kingma2017}.
 Inspection of the learned filters in the initial layer of the encoding stage
 showed evidence of spacetime-oriented filters, consistent with
 the handcrafted filters used in previous work \cite{derpanis2012spacetime}. This is illustrated in Fig.\ \ref{fig:filters}.

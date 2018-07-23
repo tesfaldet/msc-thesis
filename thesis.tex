@@ -61,6 +61,16 @@
 % acknowledgements is an abstract (to get the same formatting)
 \newenvironment{acknowledgements}{\renewcommand\abstractname{Acknowledgements}\begin{abstract}}{\end{abstract}}
 
+% fancy page header
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand\chaptermark[1]{\markboth{\MakeUppercase{Chapter~\thechapter: #1}}{}}
+\fancyhf{}
+\fancyhead[R]{\bfseries\leftmark}
+%\fancyhead[R]{\bfseries\thepage}
+\fancyfoot[C]{\thepage}
+\renewcommand\headrulewidth{0.4pt}% suppress the header rule
+
 %\setcounter{secnumdepth}{3}
 %\setcounter{tocdepth}{3}
 

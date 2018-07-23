@@ -2,7 +2,7 @@
 
 The natural world is rich in visual texture. While a precise definition of 
 texture remains to be found, most research consider it as visual patterns that 
-exhibit local spatial variations while maintaining global homogeneity, as shown in Fig.\ \ref{fig:texture}.
+exhibit local variations while maintaining global homogeneity, as shown in Fig.\ \ref{fig:texture}.
 
 \input{fig_texture}
 
@@ -11,9 +11,9 @@ can be static or dynamic: static textures exist in two-dimensional (2D) image sp
 (\eg, grass and water) while dynamic textures extend the notion across time (\eg, 
 fluttering grass and wavy water). As a result, local spatial variations and 
 global homogeneity extend across space \emph{and} time. These temporal patterns 
-have previously been studied under a variety of names, including turbulent flow \cite{heeger1986} (for extracting optical flow from fluids undergoing irregular fluctuations), temporal textures \cite{nelson1992} (for motion recognition of moving patterns such as windblown trees or rippling water), time-varying 
+have previously been studied under a variety of names, including turbulent flow \cite{heeger1986} (for extracting optical flow from fluids undergoing irregular fluctuations), temporal textures \cite{nelson1992} (for recognition of moving patterns such as windblown trees or rippling water), time-varying 
 textures \cite{bar-joseph2001} (for synthesizing stochastically-moving patterns), dynamic textures \cite{doretto2003} (for modelling and synthesizing stochastically-moving patterns), textured 
-motion \cite{wang2003} (for modelling and synthesizing patterns undergoing stochastic or consistent motion), and spacetime textures \cite{derpanis2012spacetime} (for classifying moving patterns).
+motion \cite{wang2003} (for modelling and synthesizing patterns undergoing stochastic or consistent motion), and spacetime textures \cite{derpanis2012spacetime} (for classifying dynamic patterns).
 In this thesis, the term ``dynamic texture'' is adopted.
 
 Both static and dynamic texture cues play important roles in our perception of 
@@ -22,14 +22,15 @@ of interest in human perception, computer vision, and computer graphics. In
 computer vision, studying the underlying statistics of textures allows us to gain 
 insight as to how these complex structures can be interpreted and how we may be 
 able to leverage this knowledge to inform certain vision-related tasks. Examples 
-of such tasks include shape from texture \cite{gibson1950perception}, texture 
+of such tasks include shape-from-texture \cite{gibson1950perception}, texture 
 synthesis \cite{heeger1995pyramid}, and more recently, image style transfer 
-\cite{gatys2016image}.
+\cite{gatys2016image}. In terms of specific applications, 
+there are many in the creative-industry including, but not limited to, computer-generated imagery, digital painting, and image editing.
 
-Shape from texture involves recovering the
+Shape-from-texture involves recovering the
 three-dimensional (3D) shape of an object from a 2D image by using texture as a 
 cue. Gibson \cite{gibson1950perception} proposed the \emph{texture gradient} as 
-the primary basis of surface perception by humans. He revealed that neighbouring areas on a textured surface are perceived differently only due to differences
+the primary basis of surface perception by humans. He conjectured that neighbouring areas on a textured surface are perceived differently only due to differences
 in surface orientation and distance from the observer.
 
 \input{fig_texture_synthesis}
@@ -41,7 +42,7 @@ that two textures are often difficult to discriminate when they produce a simila
 distribution of responses from a bank of linear filters. They used a combination 
 of Laplacian and steerable pyramids to deconstruct a given texture and 
 synthesized a new texture by matching the distributions of responses from each
-pyramid level. More recently, Gatys \etal \cite{gatys2015} demonstrated 
+pyramid level. Portilla and Simoncelli \cite{portilla2000parametric} extended this approach by including complex ``analytical'' filters that allowed them to utilize measures of local phase and energy in their texture descriptors. More recently, Gatys \etal \cite{gatys2015} demonstrated 
 impressive results for texture synthesis by using a convolutional network (ConvNet) instead of a linear 
 bank of filters to model the non-linear spatial statistics of a given texture.
 
@@ -50,28 +51,27 @@ bank of filters to model the non-linear spatial statistics of a given texture.
 Image style transfer (Fig.\ \ref{fig:style_transfer}) is a recent extension of texture synthesis where the goal is to 
 synthesize a texture from a source image while constraining the process in order 
 to preserve the semantic content of another image. This can be considered as a 
-texture transfer problem, as previously demonstrated by Efros \etal \cite{efros2001image} where they transferred a given texture to another image by stitching together small patches of the given texture while conforming to the luminance of the other image. Although the simplicity of their approach was attractive, it failed for highly structured textures due to patch boundary inconsistencies, limiting the selection of acceptable textures. 
-As a follow-up to \cite{gatys2015}, Gatys \etal modified their previous ConvNet to support texture transfer by including an additional objective that enforced the synthesized texture to match the semantic content of a given image, naming the process \emph{image style transfer} \cite{gatys2016image}. Unlike the patch-based method of Efros \etal \cite{efros2001image}, Gatys \etal's \cite{gatys2016image} approach of using a ConvNet was more robust to textures with long-range consistencies.
+texture transfer problem, as previously demonstrated by Efros \etal \cite{efros2001image}, where they transferred a given texture to another image by stitching together small patches of the given texture while conforming to the luminance of the other image. Although the simplicity of their approach was attractive, it failed for highly structured textures due to patch boundary inconsistencies, limiting the selection of acceptable textures. 
+Gatys \etal modified their previous ConvNet for texture synthesis \cite{gatys2015} to support texture transfer by including an additional objective that enforced the synthesized texture to match the semantic content of a given image \cite{gatys2016image}. Unlike the patch-based method of Efros \etal \cite{efros2001image}, Gatys \etal's approach of using a ConvNet was more robust to textures with long-range consistencies.
 
 Motivated by the ConvNet model of Gatys \etal \cite{gatys2016image} for texture synthesis, the focus of this work is on the synthesis of dynamic texture 
-samples based on a single exemplar through the use of ConvNets.
+samples, as captured in video, based on a single exemplar through the use of ConvNets.
+\clearpage
+\input{fig_teaser.tex}
+\clearpage
 
 \section{Summary of thesis}
-\todomatthew{provide chapter-by-chapter outline}
 
 Many common dynamic textures are naturally described by the ensemble of 
 appearance and dynamics (\ie, spatial and temporal pattern variation) of their 
 constituent elements. In this work, a factored analysis of dynamic 
 textures in terms of their appearance and dynamics is proposed.
-This factorization is then used to enable dynamic texture synthesis
-which, based on example dynamic texture inputs, will generate a novel dynamic
-texture instance.
-It shall also enable a novel form of style transfer where the 
+This factored analysis is then used to enable dynamic texture synthesis
+based on an example dynamic texture as input.
+It also enables a novel form of style transfer where the 
 target appearance and dynamics can be taken from different sources---termed \emph{dynamics style transfer}.
 An overview of dynamic texture synthesis and dynamics style transfer
 is shown in Fig.\ \ref{fig:teaser}.
-
-\input{fig_teaser.tex}
 
 The proposed model is constructed from two ConvNets: an appearance stream and a dynamics stream,
 which have been pre-trained for object recognition
@@ -112,21 +112,16 @@ through an extensive user study.
 
 \section{Contributions}
 
-\todomatthew{split contributions into a numbered list}
+The contributions of this work span both theory and application. Specifically, this thesis presents the key components for creating the proposed dynamic texture synthesis model, resulting in four primary theoretical contributions to the dynamic texture literature and a secondary applied contribution.
 
-The contributions of this work span both theory and application. First,
-theoretical insight into the characterization of dynamic textures is provided by 
-building a novel factored representation of both appearance and dynamics. Second, 
-for the representation of dynamics, a novel ConvNet is constructed and trained for 
-optical flow prediction. Third, through a qualitative evaluation, it is shown that the two-stream representation is 
-effective in generating visually compelling, novel instances of a wide range of 
-dynamic textures. Fourth, a novel form of style transfer is demonstrated, 
-where the dynamics of a dynamic texture can be mixed with the spatial appearance 
-of a different (static or dynamic) texture. This is enabled by the proposed factored 
-representation. Finally, a quantitative evaluation on the limitations of the method is performed through 
-the inclusion of a broad range of textures and an extensive user study. This analysis will show which 
-sequences work better than others and why. This may point to future work to 
-address limitations of the proposed model. In terms of specific applications, 
+\begin{enumerate}
+	\item \textbf{Factored representation of appearance and dynamics}. First, theoretical insight into the characterization of dynamic textures is provided by building a novel factored representation of both appearance and dynamics. Qualitatively, the two-stream representation is effective in generating visually compelling, novel instances of a wide range of dynamic textures.
+	\item \textbf{Motion energy representation of dynamics via a ConvNet}. Second, for the representation of dynamics, a novel ConvNet based on a ``marginalized'' motion energy model \cite{derpanis2010role,derpanis2012spacetime} is constructed and trained on the proxy task of optical flow prediction. This representation of dynamics provides a substantial improvement to the quality of synthesized textures when compared to using optical flow directly.
+	\item \textbf{Dynamics style transfer}. Third, a novel form of style transfer is demonstrated, where the dynamics of a dynamic texture can be mixed with the spatial appearance of a different (static or dynamic) texture. This is enabled by the proposed factored representation.
+	\item \textbf{Quantitative evaluation via user study}. Finally, a quantitative evaluation on the limitations of the method is performed through the inclusion of a broad range of textures and an extensive user study. This analysis will provide insight for the types of characteristics of temporal imagery that may cause a breakdown of the proposed model. This may point to future work to address limitations of the proposed model.
+\end{enumerate}
+
+In terms of specific applications, 
 there are many in the creative-industry including, but not limited to, computer-
 generated imagery, digital painting, and image editing. More broadly, the ability 
 to animate static imagery via dynamics style transfer can meaningfully contribute 

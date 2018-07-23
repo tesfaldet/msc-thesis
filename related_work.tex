@@ -52,6 +52,7 @@ processing stream.
 Textures were modelled in terms of the normalized correlations between activation maps within several layers of the network.
 
 \subsection{Texture synthesis using a ConvNet}
+\label{sec:texture_synthesis_using_a_convnet}
 
 Since the two-stream approach to dynamic texture synthesis proposed by this thesis is an extension of the above texture 
 synthesis model, it is useful to describe their approach here. Given a target texture as input,
@@ -167,13 +168,14 @@ The recovery of optical flow from temporal imagery has long been studied in comp
 A limitation of optical flow is its over commitment to local translational motion, which only partially describes the dynamics one may encounter in the real world. Examples of dynamics optical flow would fail to capture include flickering, semi-transparent motion, and stochastic dynamics. These are dynamics typically existent in dynamic textures. One of the main causes of its failure is its dependency on assumptions like brightness constancy and local smoothness, which are generally difficult to justify for stochastic dynamics. Therefore, optical flow is not an optimal measure for representing the dynamics existent in dynamic textures.
 
 \subsection{Marginalized spacetime oriented energies}
+\label{sec:msoe}
 
 At the midpoint between the two extremes lies the representation of dynamics that aims to capture a distribution of measurements of spacetime orientations in the input temporal imagery. Unlike flow-based analyses which focus on the apparent motion (\ie translation) present in the data, measurements of spacetime orientations take a geometric and generalized approach in capturing \emph{spacetime structures}: oriented structures in visual spacetime that manifest themselves as motion or non-motion (\eg flickering, stochastic dynamics, etc.). This is visualized in Fig.\ \ref{fig:spacetime_structures} alongside their frequency-space counterparts. 
 \clearpage
 \input{fig_spacetime_structures}
 \clearpage
 
-Specifically, this thesis adopts the Marginalized Spacetime Oriented Energy (MSOE) approach of Derpanis \etal \cite{derpanis2010role} in representing the observed dynamics of a dynamic texture. This representation was successfully used for the task of dynamic texture recognition \cite{derpanis2012spacetime}; here it is used for the task of dynamic texture synthesis.
+Specifically, this thesis adopts the Marginalized Spacetime Oriented Energy (MSOE) approach of Derpanis \etal \cite{derpanis2010role,derpanis2012spacetime} in representing the observed dynamics of a dynamic texture. This representation was successfully used for the task of dynamic texture recognition \cite{derpanis2012spacetime}; here it is used for the task of dynamic texture synthesis.
 
 Most closely related to this approach are energy models of visual
 motion \cite{adelson1985spatiotemporal,heeger1988,simoncelli1998,nishimoto2011,derpanis2012spacetime,konda2014}
@@ -189,7 +191,6 @@ representation of observed dynamics which will then be encoded
 as a ConvNet. Significantly, a completely analytically-defined
 oriented energy ConvNet model provides the current state-of-the-art
 for the related task of dynamic texture recognition \cite{hadji2017}.
-
 
 In motion energy models, the velocity of image content (\ie, motion)
 is interpreted as a 3D orientation in the $x$-$y$-$t$
@@ -210,7 +211,6 @@ variation of an image sequence \cite{derpanis2012spacetime}.
 This observation suggests that motion energy models may form an
 ideal basis for the dynamics stream of the proposed dynamic texture synthesis ConvNet. As stated previously, the spacetime-oriented energy model (MSOE) proposed by Derpanis \etal \cite{derpanis2010role,derpanis2012spacetime} is used to motivate the network architecture. The MSOE model is reviewed here.
 
-\todomatthew{clean up redundant parts of MSOE review section in technical approach}
 Given input temporal imagery, $\mathbf{I} \in \mathbb{R}^{T \times H \times W}$ (time $\times$ height $\times$ width), a bank of oriented 3D
 filters, \eg, Gaussian third derivative filters $G_3 \in \mathbb{R}^{T \times H \times W}$, which are sensitive to a range of
 spatiotemporal orientations, are each applied:
