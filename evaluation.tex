@@ -4,10 +4,10 @@ The goal of (dynamic) texture synthesis is to generate
 samples that are indistinguishable from the real input target
 texture by a human observer.
 In this chapter, a variety of synthesis results are presented,
-including qualitative comparisons with competing methods and a user study to quantitatively evaluate the realism
-of the results.
+including qualitative comparisons with extant methods and a user study to quantitatively evaluate the realism
+of the synthesized results.
 Given their temporal nature, the results are best viewed as 
-videos.
+videos, which are available on the project page: \url{ryersonvisionlab.github.io/two-stream-projpage}.
 The two-stream architecture was implemented using TensorFlow
 \cite{tabadi2015tensorflow}, an open source machine learning framework.
 Results were generated using an NVIDIA Titan X (Pascal) GPU
@@ -15,7 +15,7 @@ and synthesis times ranged between one to three hours
 to generate $12$ frames with an image resolution of 
 $256 \times 256$.
 For the full synthesis results and source code, please refer to the
-supplemental material. \todomatthew{link website?}
+supplemental material available on the project page.
 
 \section{Qualitative results}\label{sec:qualitative_results}
 
@@ -25,27 +25,29 @@ temporally-endless texture synthesis, and dynamics style transfer.
 \subsection{Dynamic texture synthesis}
 
 The dynamic texture synthesis process was applied 
-to a wide range of textures which were selected from the 
-DynTex \cite{peteri2010} database and others that were collected in
-the wild.
+to a wide range of textures selected from the 
+DynTex \cite{peteri2010} database and others that were collected in-the-wild.
+The collected textures include ones that adhere to the texture assumptions of this thesis (\ie, spatiotemporal homogeneity) and ones that do not.
 Included in the supplemental material are synthesized results
 of nearly 60 different textures that encapsulate a range of
 phenomena, such as flowing water, waves, clouds, fire, rippling
 flags, waving plants, and schools of fish.
-Some sample frames are shown in Fig.\ \ref{fig:successes}
+Some sample frames are shown in Fig.\ \ref{fig:successes_1} and Fig.\ \ref{fig:successes_2}
 but readers are encouraged to view the videos to fully appreciate
 the results.
 
-Fig.\ \ref{fig:successes} shows some example success cases with the
+Fig.\ \ref{fig:successes_1} and Fig.\ \ref{fig:successes_2} show some example success cases with the
 two-stream method where appearance and dynamics characteristics from the
 target are reliably preserved in the synthesized result. The
-upward fiery motion and flickering appearance of \path{fireplace_1}, the outward
-motion of the explosive splash of \path{lava},
-the wispy fluid dynamics of \path{smoke_1}, the translating god rays and
+upward fiery dynamics and flickering appearance of \path{fireplace_1}, the outward dynamics of the explosive splash of \path{lava},
+the wispy fluid dynamics of \path{smoke_1}, the
 flowing vegetation in \path{underwater_vegetation_1}, and the downward 
 rippling flow of \path{water_3}.
 
-\input{fig_successes}
+\clearpage
+\input{fig_successes_1}
+\input{fig_successes_2}
+\clearpage
 
 \subsubsection{Failure modes}
 
@@ -80,11 +82,13 @@ Interestingly, it still produces a result
 which is statistically indistinguishable from real in the user 
 study discussed in Sec.\ \ref{sec:user_study}.
 
+\clearpage
 \input{fig_failures}
+\clearpage
 
 \subsubsection{Appearance vs.\ dynamics streams}
 
-Two experiments were held to verify that the appearance and dynamics
+Two experiments were conducted to verify that the appearance and dynamics
 streams were capturing complementary information.
 To validate that the texture generation of multiple frames
 would not induce dynamics consistent with the input, frames were generated
@@ -93,8 +97,7 @@ appearance statistics and corresponding loss, \ie,
 Eq.\ \ref{eq:apploss}.
 As expected, this produced frames that were valid textures but
 with no coherent dynamics present.
-Results for a sequence containing a school of fish are shown in
-Fig.\ \ref{fig:appearance_only}; to examine the dynamics, see 
+To examine the dynamics, see 
 \path{fish} in the supplemental material.
 
 Similarly, to validate that the dynamics stream did not 
@@ -102,12 +105,14 @@ inadvertently include appearance information, dynamic textures were synthesized
 using the dynamics loss only, \ie, Eq.\ \ref{eq:dynloss}.
 The resulting frames had no visible appearance and had
 an extremely low dynamic range, \ie, the standard
-deviation of pixel intensities was 10 for values in $[0,255]$. \todomatthew{maybe include?}
+deviation of pixel intensities was 10 for values in $[0,255]$.
 This indicates a general invariance to appearance and 
 suggests that the two-stream dynamic texture representation
 has factored appearance and dynamics, as desired.
+Results for a sequence containing a school of fish are shown in
+Fig.\ \ref{fig:appearance_only_vs_dynamics_only}.
 
-\input{fig_appearance_only}
+\input{fig_appearance_only_vs_dynamics_only}
 
 \subsection{Incremental texture synthesis}
 
@@ -115,37 +120,41 @@ Dynamic textures synthesized incrementally, as described in Sec.\
 \ref{sec:incremental_synthesis}, are included in the supplemental.
 Sequences as long as 122 frames (using 11 frame subsequences) were synthesized
 with no observed divergence or degradation. The resulting textures were 
-perceptually indistinguishable from those synthesized with the batch process. \todomatthew{elaborate?}
+perceptually indistinguishable from those synthesized with the typical batch process.
 
 \subsection{Temporally-endless texture synthesis}
 
 An example of a synthesized temporally-endless dynamic texture is shown in
 Fig.\ \ref{fig:temporally_endless_synthesis}. As described in Sec.\ 
 \ref{sec:temporally_endless_synthesis}, the dynamic texture appears
-temporally endless, \ie, there is no explicit beginning or end.
+temporally endless, \ie, there is no apparent temporal discontinuity between the last and first frames.
 
 \input{fig_temporally_endless_synthesis}
 
 \subsection{Dynamics style transfer}
 
-A dynamics style transfer result is shown in Fig.\ 
-\ref{fig:motiontransfer} (top), using two real videos as the appearance and dynamics target, respectively.
-Additional examples are available in the supplemental material. \todomatthew{maybe show all examples in thesis?}
+A dynamics style transfer results is shown in Fig.\ 
+\ref{fig:motiontransfer} (top row), using two real videos as the appearance and dynamics target, respectively.
+Additional examples are available in the supplemental material.
 When performing dynamics style transfer it is important
 that the appearance structure of both targets to be similar in scale and semantics,
 otherwise, the generated dynamic textures will look unnatural.
 For instance, transferring the dynamics of a flame onto a water 
-scene will generally produce implausible results. \todomatthew{show example of this failure case?}
+scene will generally produce implausible results (Fig.\ \ref{fig:bad_motiontransfer}).
+
+\input{fig_bad_motiontransfer}
 
 The dynamics of a texture can also be applied to a static input image,
 as the target Gram matrices for the appearance loss can be computed
 on just a single frame.
 This allows us to effectively animate regions of a static image.
 The result of this process can be striking and is visualized in
-Fig.\ \ref{fig:motiontransfer} (bottom), where the appearance is 
+Fig.\ \ref{fig:motiontransfer} (second, third, and bottom rows), where the appearance is 
 taken from a painting and the dynamics from a real world video.
 
+\clearpage
 \input{fig_motiontransfer}
+\clearpage
 
 \section{User study}\label{sec:user_study}
 
@@ -164,12 +173,12 @@ A two-way alternative forced-choice (2AFC) evaluation was employed on Amazon Mec
 Turk (AMT) with 200 different users. Each user performed 59
 pairwise comparisons between a synthesized dynamic texture and 
 its target.
-Users were asked to choose which appeared more realistic
-after viewing the textures for an exposure time sampled
+Users were asked to choose which dynamic texture appeared more realistic
+after viewing the textures independently (with a brief delay between viewing each texture) for an exposure time sampled
 randomly from discrete intervals between 0.3 and 4.8 seconds.
 Measures were taken to control the experimental conditions and
 minimize the possibility of low quality data.
-See the appendix \todomatthew{reference Appendix} for further experimental
+Appendix \todomatthew{reference Appendix} provides further experimental
 details of the user study.
 
 For comparison, a baseline was constructed by using the 
@@ -180,7 +189,9 @@ Textures were synthesized with this model and the user study
 was repeated with an additional 200 users.
 To differentiate between the models, ``Flow decode layer'' 
 and ``Concat layer'' are labelled in the figures to describe the
-baseline and final model, respectively.
+baseline and final model, respectively. An example comparing a dynamic texture synthesized on the baseline and final model is shown in Fig.\ \ref{fig:baseline_comparison}.
+
+\input{fig_baseline_comparison}
 
 The results of this study are summarized in
 Fig.\ \ref{fig:pairwise_alltextures} which shows user accuracy in
@@ -202,8 +213,8 @@ The results clearly show that the use of the concatenation
 layer's activations is far more effective than the flow decode 
 layer.
 This is not surprising as optical flow alone is known to be 
-unreliable on many textures, \todomatthew{provide reference?} particularly those with
-translucent and/or chaotic motion (\eg, water, smoke, flames, etc.).
+unreliable on many textures, particularly those with
+translucent and/or chaotic dynamics (\eg, water, smoke, flames, etc.). Specifically, its assumptions of a single coherent movement for each pixel and brightness constancy are violated.
 Also evident in these results is the time-dependant nature of 
 perception for textures from both models.
 Users' ability to identify the generated texture improved as 
@@ -228,7 +239,7 @@ Fig.\ \ref{fig:pairwise_grouped}.
 \input{fig_pairwise_grouped}
 
 A full breakdown of the user study results by dynamic texture and 
-grouping can be found in the appendix.
+grouping can be found in Appendix \todomatthew{cite Appendix}.
 Here some of the overall trends are discussed.
 
 \subsubsection{Appearance-based analysis}
@@ -281,42 +292,47 @@ spatially-inconsistent dynamics.
 
 \section{Qualitative comparisons}
 
-In this section, a qualitative comparison with the competing methods of Funke 
-\etal \cite{funke2017} and Xie \etal \cite{xie2017synthesizing} is performed. \todomatthew{explain their methods in related work}
+In this section, a qualitative comparison with the extant methods of Funke 
+\etal \cite{funke2017} and Xie \etal \cite{xie2017synthesizing} is performed.
 Generally, results from the proposed two-stream model are found to be qualitatively comparable or better than these methods.
 
-To note, Funke \etal \cite{funke2017} provided results on
+To note, Funke \etal provided results on
 only five textures and of those only four
 are dynamic textures in the sense that their appearance
 and dynamics are spatiotemporally coherent.
 Their results on these sequences (\path{cranberries}, \path{flames}, 
 \path{leaves}, and \path{water_5}) are included in the folder
-\path{funke} under \path{dynamic_texture_synthesis/comparisons} in the supplementary material.
-The results from the two-stream model are included as well.
+\path{funke} under \path{dynamic_texture_synthesis/comparisons} in the supplementary material. The results from the two-stream model are included as well. An example on the \path{leaves} sequence is shown in Fig.\ \ref{fig:funke_comparison}.
+
+\input{fig_funke_comparison}
 
 Results are also compared on nine dynamic textures chosen to cover the full
 range of the dynamics and appearance groupings introduced in the user study.
 Publicly available code from Funke \etal and Xie \etal is used to produce their
-results and the same parameters used in their experiments are used here. For
-Funke \etal's model \cite{funke2017}, the parameters used are $\Delta{t}=4$ and
-$T=12$ \todomatthew{explain these params} (recall that target dynamic textures
+results with their default parameter settings. For
+Funke \etal's model, the parameters used are $\Delta{t}=4$ and
+$T=12$ (recall that target dynamic textures
 consist of 12 frames). For the spatiotemporal and temporal models from Xie
-\etal \cite{xie2017synthesizing}, the parameters used are $T=1200$ and
-$\tilde{M}=3$. \todomatthew{explain these params}
+\etal, the parameters used are $T=1200$ and
+$\tilde{M}=3$.
 A comparison between the results from the proposed two-stream model, Funke
-\etal's \cite{funke2017} model, and Xie \etal's \cite{xie2017synthesizing} model
+\etal's model, and Xie \etal's model
 on the nine dynamic textures are included in the folder \path{xie_and_funke}
-under \path{dynamic_texture_synthesis/comparisons}. \todomatthew{also include figure}
-\todomatthew{maybe leave folder description for appendix}
-Note for Xie \etal \cite{xie2017synthesizing}, comparisons are made with their
-spatiotemporal model (labeled ``Xie et al.\ (ST)'') designed for dynamic
-textures with both spatial and temporal homogeneity, and their temporal model
-(labeled ``Xie et al.\ (FC)'') designed for dynamic textures with only temporal
+under \path{dynamic_texture_synthesis/comparisons}. An example on the \path{smoke_plume_1} dynamic texture is shown in Fig.\ \ref{fig:funke_xie_comparison}.
+
+Note for Xie \etal, comparisons are made with their
+spatiotemporal model, labelled ``Xie et al.\ (ST)'', designed for dynamic
+textures with both spatial and temporal homogeneity, and their temporal model,
+labelled ``Xie et al.\ (FC)'', designed for dynamic textures with only temporal
 homogeneity.
+
+\clearpage
+\input{fig_funke_xie_comparison}
+\clearpage
 
 Overall, the results from the proposed two-stream model appear
 qualitatively better, showing more temporal coherence and similarity
-in dynamics and fewer artifacts, \eg, blur and flicker.
+in dynamics as well as fewer spatial and temporal artifacts, such as blur and flicker, respectively.
 This may be a natural consequence of the limited representation of dynamics
 in both Funke \etal's and Xie \etal's models. Although the spatiotemporal model
 of Xie \etal \cite{xie2017synthesizing} is able to synthesize dynamic textures
@@ -325,10 +341,25 @@ note that their method can not synthesize novel dynamic textures, \ie, it
 appears to faithfully reproduce the target texture, reducing the applicability
 of their approach.
 
-As a consequence of jointly modelling appearance and dynamics, the methods of
-\cite{funke2017,xie2017synthesizing} are not capable of the novel form of style
+As a consequence of jointly modelling appearance and dynamics, both methods \cite{funke2017,xie2017synthesizing} are not capable of the novel form of style
 transfer that was demonstrated above. This was enabled by the factored
 representation of dynamics and appearance. Furthermore, the spatiotemporal
 extent of the output sequence generated by Xie \etal's
 \cite{xie2017synthesizing} method is limited to being equal to the input.
 The proposed approach does not share this limitation.
+
+\section{Discussion}
+
+This chapter provided a qualitative analysis on a variety of results obtained using the proposed two-stream model for dynamic texture synthesis, incremental texture synthesis, temporally-endless texture synthesis, and dynamics style transfer. For dynamic texture synthesis, it was shown that both the appearance and dynamics streams were required to synthesize dynamic textures that matched both the framewise appearance of the target and its dynamics. For incremental texture synthesis, it was shown that dynamic textures incrementally synthesized exhibited no divergence or degradation when compared to those synthesized using the typical batch process. For temporally-endless texture synthesis, it was shown that the synthesized dynamic textures exhibited no apparent temporal discontinuity between the last and first frames. For dynamics style transfer, it was shown that the dynamics of one dynamic texture can be successfully combined with the appearance of another, under the stipulation that the appearance and dynamics targets came from textures similar in scale and semantics.
+
+Additionally, a large-scale user study was performed to quantitatively evaluate the realism of dynamic textures synthesized by the proposed model by comparing synthesized results with their respective targets. An evaluation on a baseline version of the model was performed as well. Overall, dynamic textures synthesized by the two-stream model were able to fool users $33.9\% \pm 2.5\%$ of the time for brief exposures. In contrast, dynamic textures synthesized by the baseline model were able to fool users $10.2\% \pm 1.8\%$ of the time.
+
+Finally, a qualitative comparison with two extant methods for dynamic texture synthesis was performed. Overall, the results from the proposed two-stream model were shown to be qualitatively better than the compared methods, showing more temporal coherence and similarity in dynamics as well as fewer spatial and temporal artifacts. Furthermore, the other methods were shown to lack the capability of the novel dynamics style transfer shown by the proposed two-stream model.
+
+% qualitative results
+  % dynamic texture synthesis
+  % incremental texture synthesis
+  % temporally-endless texture synthesis
+  % dynamics style transfer
+% user study
+% qualitative comparisons

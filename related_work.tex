@@ -8,7 +8,7 @@ related to this thesis is covered simultaneously.
 
 \section{Convolutional networks}
 
-A convolutional network (ConvNet) is a feed-forward computational graph of processing nodes, commonly used in analyzing visual imagery. It is a class of artificial neural networks (ANNs), which are computational systems vaguely inspired by the biological neural networks that constitute animal brains. ConvNets perform tasks (\eg, object classification) by processing an input, $\mathbf{X} \in \mathbb{R}^{H_x \times W_x \times C_x}$, in a feed-forward manner via a series of linear and non-linear transformations and producing an output, $\mathbf{Y} \in \mathbb{R}^{H_y \times W_y \times C_y}$, relevant to the task (such as the class of an object). Here $H_\ast \times W_\ast$ represents spatial dimensions and $C_\ast$ represents the  channel dimension. Each non-linear transformation acts as a point of demarcation in the network known as a \emph{layer}. ConvNets typically consist of multiple layers, each containing a collection of nodes called \emph{neurons}. At each spatial-channel location of the input to a layer, a neuron computes local non-linear transformations, \eg, $\sigma(\mathbf{x}) = \max{(0, \phi(\mathbf{x}))}$ (known as the \emph{rectified linear unit} or ReLU \cite{nair2010rectified}). At a single location of the input, $\mathbf{x} \equiv (x, y, z)$, the non-linear transformation performed by this neuron produces an output called an \emph{activation} or \emph{feature}, $\sigma(\mathbf{x}) \in \mathbb{R}$. The set of activations produced by a neuron at every location of the input is known as an \emph{activation map} or \emph{feature map}, $\sigma \in \mathbb{R}^{H_\sigma \times W_\sigma \times C_\sigma}$. At the $l$-th layer of the network and for each location $\mathbf{x}$ of the input map, the input to each neuron is the weighted linear combination of activations from neighbouring neurons at the previous layer, $l-1$:
+A convolutional network (ConvNet) is a feed-forward computational graph of processing nodes, commonly used in analyzing visual imagery. It is a class of artificial neural networks (ANNs), which are computational systems vaguely inspired by the biological neural networks that constitute animal brains. ConvNets perform tasks (\eg, object classification) by processing an input, $\mathbf{X} \in \mathbb{R}^{H_x \times W_x \times C_x}$, in a feed-forward manner via a series of linear and non-linear transformations and producing an output, $\mathbf{Y} \in \mathbb{R}^{H_y \times W_y \times C_y}$, relevant to the task (such as the class of an object). Here $H_\ast \times W_\ast$ represents spatial dimensions and $C_\ast$ represents the  number of channels. Each non-linear transformation acts as a point of demarcation in the network known as a \emph{layer}. ConvNets typically consist of multiple layers, each containing a collection of nodes sometimes called \emph{neurons}. At each spatial-channel location of the input to a layer, a neuron computes local non-linear transformations, \eg, $\sigma(\mathbf{x}) = \max{(0, \phi(\mathbf{x}))}$ (known as the \emph{rectified linear unit} or ReLU \cite{nair2010rectified}). At a single location of the input, $\mathbf{x} \equiv (x, y, z)$, the non-linear transformation performed by this neuron produces an output called an \emph{activation} or \emph{feature}, $\sigma(\mathbf{x}) \in \mathbb{R}$. The set of activations produced by a neuron at every location of the input is known as an \emph{activation map} or \emph{feature map}, $\sigma \in \mathbb{R}^{H_\sigma \times W_\sigma \times C_\sigma}$. At the $l$-th layer of the network and for each location $\mathbf{x}$ of the input map, the input to each neuron is the weighted linear combination of activations from neighbouring neurons at the previous layer, $l-1$:
 \begin{equation}
 	\begin{aligned}
 		\phi^l(\mathbf{x}) &= \left(\mathbf{w}^l * \sigma^{l-1}(\mathbf{x})\right) + b^l\\
@@ -17,11 +17,11 @@ A convolutional network (ConvNet) is a feed-forward computational graph of proce
 \end{equation}
 where $\mathbf{w}^l$ are the \emph{weights} (or \emph{filter}) of the neuron applied to the input $\sigma^{l-1}(\mathbf{x})$, $\Omega$ is a spatial-channel neighbourhood centered about $\mathbf{x}$, $b^l$ is an offset term known as the \emph{bias}, and $\ast$ represents the \emph{convolution} (or \emph{filtering}) operator. Colloquially, the term ``convolution'' is often used to describe the combined process of convolving over an input and subsequently computing its activation. Convolution is typically done in a sliding window fashion across the entire input. At the base of the ConvNet, inputs are typically images (\eg, RGB image $\mathbf{X} \in \mathbb{R}^{H_x \times W_x \times 3}$), while inputs at intermediate layers are activation maps (\eg, $\sigma \in \mathbb{R}^{H_\sigma \times W_\sigma \times C_\sigma}$). 
 
-ConvNets ``learn'' to perform tasks through an iterative process called \emph{training}. At each iteration, an input is fed through the network to produce an output which is subsequently evaluated against the ``true'' output for the given input. This evaluation is known as the \emph{loss function} and represents the network's performance on the task. Implicitly, it also represents the objective the network must achieve (\eg, minimizing classification error). Starting from the loss, the network \emph{backpropagates} adjustments to its weights and biases at each layer via the gradient of the loss with respect to the weights and biases at that layer. After a suitable amount of training iterations, this \emph{gradient descent} process will have adjusted the weights and biases of the network such that it is able to achieve its objective in minimizing the loss.
+ConvNets ``learn'' to perform tasks through an iterative process called \emph{training}. At each iteration, an input is fed through the network to produce an output which is subsequently evaluated against the ``true'' output for the given input. This evaluation is known as the \emph{loss function} and represents the network's performance on the task. Implicitly, it also represents the objective the network must achieve (\eg, minimizing classification error). Starting from the loss, the network adjusts its weights and biases at each layer via the gradient of the loss with respect to the weights and biases at that layer. After a suitable amount of training iterations, this \emph{gradient descent} process will be stopped.
 
 \section{Parametric texture synthesis}
 
-To review, texture synthesis is the process of algorithmically constructing a texture that
+Texture synthesis is the process of algorithmically constructing a texture that
 matches or extends a given source texture by taking advantage of its structural 
 content. There are two general approaches that have dominated the texture
 synthesis literature: non-parametric sampling approaches that
@@ -51,13 +51,13 @@ recognition. This ConvNet, in effect, served as a proxy for the ventral visual
 processing stream. 
 Textures were modelled in terms of the normalized correlations between activation maps within several layers of the network.
 
-\subsection{Texture synthesis using a ConvNet}
+\subsection{Texture synthesis using a convolutional network}
 \label{sec:texture_synthesis_using_a_convnet}
 
 Since the two-stream approach to dynamic texture synthesis proposed by this thesis is an extension of the above texture 
 synthesis model, it is useful to describe their approach here. Given a target texture as input,
 let $\mathbf{A}^{l} \in \mathbb{R}^{N_l\times M_l}$
-be its row-vectorized activation maps at the $l$-th layer of VGG-19, where $N_l$ and $M_l$ denote the number of
+be its row-vectorized activation maps at the $l$-th layer of a ConvNet (VGG-19 in the case of Gatys \etal \cite{gatys2015}), where $N_l$ and $M_l$ denote the number of
 activation maps and the number of spatial locations,
 respectively. The normalized correlations between activation maps
 within a layer are encapsulated by a Gram matrix,
@@ -66,7 +66,7 @@ $\mathbf{G}^l \in \mathbb{R}^{N_l \times N_l}$, whose entries are given by:
 	G_{ij}^l = \frac{1}{N_l M_l} \sum_{k=1}^{M_l} A_{ik}^l A_{jk}^l\ ,
 \end{equation}
 where $A_{ik}^l$ denotes the activation of feature $i$ at
-location $k$ in layer $l$ on the target texture.
+location $k$ in layer $l$ on the target texture. Note that the Gram matrix assumes spatial invariance of the activation statistics.
 Given a synthesized texture as input, similarly, let its row-vectorized activation maps
 be $\hat{\mathbf{A}}^{l} \in \mathbb{R}^{N_l\times M_l}$ and its normalized
 activation map correlations be the Gram matrix, $\hat{\mathbf{G}}^l \in \mathbb{R}^{N_l \times N_l}$, whose entries are given by:
@@ -87,7 +87,7 @@ Before synthesizing a texture, an initial forward pass through VGG-19 is
 performed with the target texture as input. The target texture's Gram matrices
 across various layers in the network are computed and saved as objectives for
 the synthesis process. Then the synthesized texture is initialized with IID
-Gaussian noise. Finally, with the weights of VGG-19 kept fixed, the final
+Gaussian noise. The final
 objective (Eq.\ \ref{eq:tex_loss}) is minimized with respect to the synthesized texture. With each
 iteration of the optimization process, the synthesized texture is updated to appear increasingly
 perceptually similar to the target texture. An overview of this process is presented in Fig.\ \ref{fig:vgg_texture_synthesis}.
@@ -165,7 +165,7 @@ At the other extreme of Fig.\ \ref{fig:dynamics_representations}, a two-dimensio
 \input{fig_optical_flow}
 The recovery of optical flow from temporal imagery has long been studied in computer vision. Traditionally, it has been addressed by handcrafted approaches \eg, \cite{horn1981,lucas1981,revaud2015epicflow}. Recently, ConvNet approaches have been demonstrated as viable alternatives \cite{dosovitskiy2015,ilg2017,ranjan2017,yu2016}.
 
-A limitation of optical flow is its over commitment to local translational motion, which only partially describes the dynamics one may encounter in the real world. Examples of dynamics optical flow would fail to capture include flickering, semi-transparent motion, and stochastic dynamics. These are dynamics typically existent in dynamic textures. One of the main causes of its failure is its dependency on assumptions like brightness constancy and local smoothness, which are generally difficult to justify for stochastic dynamics. Therefore, optical flow is not an optimal measure for representing the dynamics existent in dynamic textures.
+A limitation of optical flow is its reliance on a single coherent movement for each pixel and its underlying assumption on brightness constancy, which is difficult to justify for the dynamics one may encounter in the real world. Examples of dynamics optical flow would fail to capture include flickering, semi-transparent motion, and stochastic dynamics. These are dynamics typically existent in dynamic textures. Therefore, optical flow is not an optimal measure for representing the dynamics existent in dynamic textures.
 
 \subsection{Marginalized spacetime oriented energies}
 \label{sec:msoe}

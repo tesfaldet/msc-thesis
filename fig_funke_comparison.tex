@@ -1,0 +1,24 @@
+\begin{figure}[t]
+\begin{center}
+\begin{tabular}{ >{\centering\arraybackslash} m{0.16\textwidth} || >{\centering\arraybackslash} m{0.80\textwidth} }
+{target (\path{leaves})} & 
+\showtexture{leaves/frame_} \\
+\hline \hline
+{Funke \etal \cite{funke2017}} &
+\showtexture{leaves_funke/frame_} \\
+\hline
+{Two-stream model} & 
+\showtexture{leaves_output/frame_} \\
+\end{tabular}
+\end{center}
+\vspace{-0.45cm}
+\caption[Qualitative comparison with Funke \etal's \cite{funke2017} model]{Qualitative comparison with Funke \etal's \cite{funke2017} model on one of the sequences used in their work. Note that this sequence does not follow the thesis' assumption of a dynamic texture.
+(top row) Target sequence.
+(middle row)
+Dynamic texture synthesis when using Funke \etal's model. The model fails to capture the up-right motion of the leaves.
+(bottom row)
+Dynamic texture synthesis when using the proposed two-stream model. The up-right motion of the leaves is captured. Results are best viewed in video.
+}
+\label{fig:funke_comparison}
+\end{figure}
+

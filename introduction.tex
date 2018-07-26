@@ -25,7 +25,9 @@ able to leverage this knowledge to inform certain vision-related tasks. Examples
 of such tasks include shape-from-texture \cite{gibson1950perception}, texture 
 synthesis \cite{heeger1995pyramid}, and more recently, image style transfer 
 \cite{gatys2016image}. In terms of specific applications, 
-there are many in the creative-industry including, but not limited to, computer-generated imagery, digital painting, and image editing.
+there are many in the creative-industry including, but not limited to, computer-generated imagery, digital painting, and image editing. More broadly, the ability 
+to animate static imagery via dynamics style transfer can meaningfully contribute 
+to the emerging artistic medium of computer-generated art.
 
 Shape-from-texture involves recovering the
 three-dimensional (3D) shape of an object from a 2D image by using texture as a 
@@ -48,9 +50,8 @@ bank of filters to model the non-linear spatial statistics of a given texture.
 
 \input{fig_style_transfer}
 
-Image style transfer (Fig.\ \ref{fig:style_transfer}) is a recent extension of texture synthesis where the goal is to 
-synthesize a texture from a source image while constraining the process in order 
-to preserve the semantic content of another image. This can be considered as a 
+Image style transfer (Fig.\ \ref{fig:style_transfer}) is a recent technique where the goal is to 
+recompose an image in the ``style'' (\eg, texture) of another image. This can be considered as a 
 texture transfer problem, as previously demonstrated by Efros \etal \cite{efros2001image}, where they transferred a given texture to another image by stitching together small patches of the given texture while conforming to the luminance of the other image. Although the simplicity of their approach was attractive, it failed for highly structured textures due to patch boundary inconsistencies, limiting the selection of acceptable textures. 
 Gatys \etal modified their previous ConvNet for texture synthesis \cite{gatys2015} to support texture transfer by including an additional objective that enforced the synthesized texture to match the semantic content of a given image \cite{gatys2016image}. Unlike the patch-based method of Efros \etal \cite{efros2001image}, Gatys \etal's approach of using a ConvNet was more robust to textures with long-range consistencies.
 
@@ -112,7 +113,7 @@ through an extensive user study.
 
 \section{Contributions}
 
-The contributions of this work span both theory and application. Specifically, this thesis presents the key components for creating the proposed dynamic texture synthesis model, resulting in four primary theoretical contributions to the dynamic texture literature and a secondary applied contribution.
+The contributions of this work span both theory and application. Specifically, this thesis presents the key components for creating the proposed dynamic texture synthesis model, resulting in four primary contributions to the dynamic texture literature.
 
 \begin{enumerate}
 	\item \textbf{Factored representation of appearance and dynamics}. First, theoretical insight into the characterization of dynamic textures is provided by building a novel factored representation of both appearance and dynamics. Qualitatively, the two-stream representation is effective in generating visually compelling, novel instances of a wide range of dynamic textures.
@@ -120,9 +121,3 @@ The contributions of this work span both theory and application. Specifically, t
 	\item \textbf{Dynamics style transfer}. Third, a novel form of style transfer is demonstrated, where the dynamics of a dynamic texture can be mixed with the spatial appearance of a different (static or dynamic) texture. This is enabled by the proposed factored representation.
 	\item \textbf{Quantitative evaluation via user study}. Finally, a quantitative evaluation on the limitations of the method is performed through the inclusion of a broad range of textures and an extensive user study. This analysis will provide insight for the types of characteristics of temporal imagery that may cause a breakdown of the proposed model. This may point to future work to address limitations of the proposed model.
 \end{enumerate}
-
-In terms of specific applications, 
-there are many in the creative-industry including, but not limited to, computer-
-generated imagery, digital painting, and image editing. More broadly, the ability 
-to animate static imagery via dynamics style transfer can meaningfully contribute 
-to the emerging artistic medium of computer-generated art.

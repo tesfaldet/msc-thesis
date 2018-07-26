@@ -1,0 +1,24 @@
+\begin{figure}[t]
+\begin{center}
+\begin{tabular}{ >{\centering\arraybackslash} m{0.16\textwidth} || >{\centering\arraybackslash} m{0.80\textwidth} }
+{target (\path{waterfall})} & 
+\showtexture{waterfall/frame_} \\
+\hline \hline
+{flow decode layer (baseline)} &
+\showtexture{waterfall_flowdecode/frame_} \\
+\hline
+{concatenation layer (final)} & 
+\showtexture{waterfall_concat/frame_} \\
+\end{tabular}
+\end{center}
+\vspace{-0.45cm}
+\caption[Comparison with a dynamic texture synthesized using optical-flow directly]{Comparison with a dynamic texture synthesized using optical-flow directly.
+(top row) Target dynamic texture.
+(middle row)
+Dynamic texture synthesis when using the ``Flow decode layer'' on the dynamics stream. This is the baseline model and corresponds to attempting to mimic the optical flow statistics of the texture directly. The dynamics of the waterfall are poorly captured, lacking the downward motion exhibited by the target.
+(bottom row)
+Dynamic texture synthesis when using the ``Concat layer'' on the dynamics stream. This is the final model. The downward motion and overall dynamics of the target are reliably captured.
+}
+\label{fig:baseline_comparison}
+\end{figure}
+

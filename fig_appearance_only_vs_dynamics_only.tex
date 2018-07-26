@@ -1,0 +1,31 @@
+\begin{figure}[t]
+\begin{center}
+\begin{tabular}{ >{\centering\arraybackslash} m{0.16\textwidth} || >{\centering\arraybackslash} m{0.80\textwidth} }
+{target (\path{fish})} & 
+\showtexture{fish/frame_} \\
+\hline \hline
+{appearance only} &
+\showtexture{fish_spatialonly/frame_} \\
+\hline
+{dynamics only} &
+\showtexture{fish_dynamicsonly/frame_} \\
+\hline
+{both streams} & 
+\showtexture{fish_output/frame_} \\
+\end{tabular}
+\end{center}
+\vspace{-0.45cm}
+\caption[Two-stream dynamic texture synthesis versus dynamics-only and appearance-only texture synthesis]{Two-stream dynamic texture synthesis versus dynamics-only and appearance-only texture synthesis.
+(top row) Target dynamic texture.
+(second row)
+Texture synthesis without dynamics constraints shows
+consistent per-frame appearance but no temporal coherence.
+(third row)
+Texture synthesis without appearance constraints shows
+limited per-frame appearance with pixel intensities having a standard deviation of 10.
+(bottom row)
+Including both streams induces consistent appearance and dynamics.
+}
+\label{fig:appearance_only_vs_dynamics_only}
+\end{figure}
+
