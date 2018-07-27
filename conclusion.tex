@@ -1,34 +1,37 @@
-\chapter{Conclusion \todomatthew{haven't touched yet}}
-In this paper, we presented a novel, two-stream model
-of dynamic textures using ConvNets to represent the appearance and
-dynamics.
-We applied this model to a variety of dynamic texture synthesis
-tasks and showed that, so long as the input textures are generally
-true dynamic textures, \ie, have spatially invariant statistics and
-spatiotemporally invariant dynamics, the resulting synthesized 
-textures are compelling.
-This was validated both qualitatively and quantitatively through
-a large user study.
-Further, we showed that the two-stream model enabled dynamics
-style transfer, where the appearance and dynamics 
-information from different sources can be combined to generate
-a novel texture.
+\chapter{Conclusion}
 
-We have explored this model thoroughly and found a few limitations which we leave as directions for future work.
+This chapter concludes the thesis with a summary of its main contributions (Sec.\ \ref{sec:thesis_summary}) and a discussion on potential avenues for future work (Sec.\ \ref{sec:future_work}).
+
+\section{Thesis summary}\label{sec:thesis_summary}
+
+This thesis presented a novel, two-stream analysis
+of dynamic textures using ConvNets to represent appearance and
+dynamics statistics, culminating in four primary contributions to the dynamic texture literature spanning both theory and application.
+
+First, theoretical insight into the characterization of dynamic textures is provided by building a novel factored representation of both appearance and dynamics. Second, for the representation of dynamics, a novel ConvNet based on the ``marginalized'' spacetime-oriented energy model of Derpanis \etal \cite{derpanis2012spacetime} was constructed. It was shown to provide a substantial improvement on the temporal coherence of synthesized dynamic textures when compared to using a dynamics representation based purely on optical flow. Third, a novel form of style transfer was demonstrated, where the appearance and dynamics information from different texture sources could be combined to produce a compelling composition of the two. This was shown to be enabled by the factored two-stream representation of appearance and dynamics. Finally, the model was applied to a variety of dynamic texture synthesis tasks and it was shown that, so long as the input textures followed the thesis' assumptions of a dynamic texture, \ie, have spatially invariant statistics and spatiotemporally invariant dynamics, the resulting synthesized textures were compelling. This was validated both qualitatively and quantitatively through a large user study and comparisons with extant methods for dynamic texture synthesis.
+
+Beyond the theoretical implications of this thesis lie numerous applications in the creative-industry including, but not limited to, computer-generated imagery, digital painting, and image editing. More broadly, the ability 
+to animate static imagery via dynamics style transfer can meaningfully contribute 
+to the emerging artistic medium of computer-generated art.
+
+\section{Future work}\label{sec:future_work}
+
+This thesis has explored the proposed two-stream model thoroughly. Consequently, a few limitations were revealed; however, in light of the implications of some of the experiments (\eg, dynamics style transfer), potential avenues for artistic exploration have been revealed as well. These have been left as directions for future work. This section will first describe the aforementioned limitations and propose possible solutions, then it will outline some interesting potential artistic applications as well as some extensions to the model to enable these applications.
+
 First, much like has been reported in recent image style transfer
-work \cite{gatys2016image}, we have found that high frequency
-noise and chromatic aberrations are a problem in generation.
-Another issue that arises is the model fails to capture
-textures with spatially-variant appearance, (\eg, 
+work \cite{gatys2016image}, results in this thesis show that high frequency
+noise and chromatic aberrations are a problem in generation. Another issue that arises is the model fails to capture
+textures with spatially-varying appearance, (\eg, 
 \texttt{flag} in Fig.\ \ref{fig:failures}) and
 spatially-inconsistent dynamics (\eg, \texttt{escalator} in 
 Fig.\ \ref{fig:failures}).
 By collapsing the local statistics into a Gram matrix, 
 the spatial and temporal organization is lost.
-Simple post-processing methods may alleviate some of these issues
-but we believe that they also point to a need for a better
-representation.
+Simple post-processing methods, \eg, blurring, may alleviate issues with noise and chromatic aberration, but holistically, these appearance-based issues point to a need for a better representation of appearance. To preserve spatial structure, Berger \etal \cite{berger2016} experimented with incorporating long range consistency in ConvNet-based texture synthesis by computing multiple Gram matrices at a layer instead of one. Specifically, instead of just computing correlations between activation maps, correlations between activation maps and spatially-transformed activation maps were computed as well. Although this seems promising, it is worth noting that it is computationally expensive due to the additional Gram computations.
+
 Beyond addressing these limitations, a natural next step would be
 to extend the idea of a factorized representation into feed-forward
 generative networks that have found success in static image
-synthesis, \eg, \cite{johnson2016,ulyanov2016}.
+synthesis, \eg, \cite{johnson2016,ulyanov2016}. These networks move the computational burden of the optimization process to a learning stage, where given a single example of a texture, a compact ``generator'' ConvNet is trained to generate multiple samples of the same texture. The same texture-modelling ConvNet used before is kept as the ``perceptual'' loss, measuring similarity in activation statistics between the synthesized and target textures. These networks have shown to be hundreds of times faster than the traditional approach introduced by Gatys \etal \cite{gatys2015}, from which the two-stream model is based on.
+
+Dynamics style transfer is an exciting application of the two-stream model that incites further exploration on texture-based artistic tools. Like image style transfer \cite{gatys2016image}, however, it is limited in its ability to allow artists granular control over visual aesthetics. Recently, there has been some progress extending image style transfer to include control over spatial location and colour information across spatial scales \cite{gatys2017}. An extension to dynamics style transfer could involve incorporating this technique to allow artists to decide which regions of an image to transfer dynamics to. A metaphorical ``motion brush''.
