@@ -63,6 +63,14 @@
 % acknowledgements is an abstract (to get the same formatting)
 \newenvironment{acknowledgements}{\renewcommand\abstractname{Acknowledgements}\begin{abstract}}{\end{abstract}}
 
+% include appendix in table of contents
+\newcommand\myappendix[1]{%
+  \appendix
+  \chapter*{#1}\label{chap:appendix}
+  \markboth{\MakeUppercase{#1}}{}
+  \refstepcounter{chapter}
+  \addcontentsline{toc}{chapter}{#1}}
+
 % fancy page header
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -115,7 +123,7 @@
 %\todos
 
 %------------Appendix--------------%
-\appendix
+\myappendix{Appendix}
 
 \input{experimental_procedure}
 

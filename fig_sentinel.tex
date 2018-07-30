@@ -1,0 +1,23 @@
+\begin{figure}[t]
+\begin{center}
+\begin{tabular}{ >{\centering\arraybackslash} m{0.16\textwidth} || >{\centering\arraybackslash} m{0.80\textwidth} }
+{target (\path{water_1})} & 
+\showtexture{water_1/frame_} \\
+\hline \hline
+{synthesized} &
+\showtexture{water_1_output/frame_} \\
+\hline
+{sentinel} & 
+\showtexture{water_1_sentinel/frame_} \\
+\end{tabular}
+\end{center}
+\vspace{-0.45cm}
+\caption[Example of a sentinel dynamic texture for the user study]{Example of a sentinel dynamic texture for the user study.
+(top row) Target dynamic texture.
+(middle row)
+An obviously-unrealistic synthesized dynamic texture (a sentinel example). Achieved by terminating synthesis early (100 optimization iterations).
+(bottom row)
+Dynamic texture synthesized after $6,000$ optimization iterations.
+}
+\label{fig:sentinel}
+\end{figure}

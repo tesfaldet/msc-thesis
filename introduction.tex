@@ -25,9 +25,7 @@ able to leverage this knowledge to inform certain vision-related tasks. Examples
 of such tasks include shape-from-texture \cite{gibson1950perception}, texture 
 synthesis \cite{heeger1995pyramid}, and more recently, image style transfer 
 \cite{gatys2016image}. In terms of specific applications, 
-there are many in the creative-industry including, but not limited to, computer-generated imagery, digital painting, and image editing. More broadly, the ability 
-to animate static imagery via dynamics style transfer can meaningfully contribute 
-to the emerging artistic medium of computer-generated art.
+there are many in the creative-industry including, but not limited to, computer-generated imagery, digital painting, and image editing.
 
 Shape-from-texture involves recovering the
 three-dimensional (3D) shape of an object from a 2D image by using texture as a 
@@ -53,19 +51,16 @@ bank of filters to model the non-linear spatial statistics of a given texture.
 Image style transfer (Fig.\ \ref{fig:style_transfer}) is a recent technique where the goal is to 
 recompose an image in the ``style'' (\eg, texture) of another image. This can be considered as a 
 texture transfer problem, as previously demonstrated by Efros \etal \cite{efros2001image}, where they transferred a given texture to another image by stitching together small patches of the given texture while conforming to the luminance of the other image. Although the simplicity of their approach was attractive, it failed for highly structured textures due to patch boundary inconsistencies, limiting the selection of acceptable textures. 
-Gatys \etal modified their previous ConvNet for texture synthesis \cite{gatys2015} to support texture transfer by including an additional objective that enforced the synthesized texture to match the semantic content of a given image \cite{gatys2016image}. Unlike the patch-based method of Efros \etal \cite{efros2001image}, Gatys \etal's approach of using a ConvNet was more robust to textures with long-range consistencies.
+Gatys \etal \cite{gatys2015} modified their previous ConvNet for texture synthesis to support texture transfer by including an additional objective that enforced the synthesized texture to match the semantic content of a given image, resulting in an image style transfer \cite{gatys2016image}. Unlike the patch-based method of Efros \etal \cite{efros2001image}, Gatys \etal's approach of using a ConvNet was more robust to textures with long-range consistencies.
 
-Motivated by the ConvNet model of Gatys \etal \cite{gatys2016image} for texture synthesis, the focus of this work is on the synthesis of dynamic texture 
-samples, as captured in video, based on a single exemplar through the use of ConvNets.
-\clearpage
-\input{fig_teaser.tex}
-\clearpage
+Motivated by the ConvNet model of Gatys \etal \cite{gatys2015} for texture synthesis, the focus of this thesis is on the synthesis of dynamic texture 
+samples, as captured in video, based on a single exemplar through the use of ConvNets. Inspired by Gatys \etal's \cite{gatys2016image} method of image style transfer, a novel form of style transfer for dynamic textures is presented as well.
 
 \section{Summary of thesis}
 
 Many common dynamic textures are naturally described by the ensemble of 
 appearance and dynamics (\ie, spatial and temporal pattern variation) of their 
-constituent elements. In this work, a factored analysis of dynamic 
+constituent elements. In this thesis, a factored analysis of dynamic 
 textures in terms of their appearance and dynamics is proposed.
 This factored analysis is then used to enable dynamic texture synthesis
 based on an example dynamic texture as input.
@@ -73,7 +68,9 @@ It also enables a novel form of style transfer where the
 target appearance and dynamics can be taken from different sources---termed \emph{dynamics style transfer}.
 An overview of dynamic texture synthesis and dynamics style transfer
 is shown in Fig.\ \ref{fig:teaser}.
-
+\clearpage
+\input{fig_teaser.tex}
+\clearpage
 The proposed model is constructed from two ConvNets: an appearance stream and a dynamics stream,
 which have been pre-trained for object recognition
 and optical flow prediction, respectively.

@@ -95,12 +95,12 @@ motivated by the spacetime-oriented energy model
 
  This section is only intended to briefly review the aspects of the Marginalized Spacetime Oriented Energies (MSOE) model \cite{derpanis2012spacetime} that are most relevant to the following section; a more thorough overview can be found in the previous chapter (Sec.\ \ref{sec:msoe}).
 
-A significant limitation of optical flow is its reliance on a single coherent movement for each pixel and its underlying assumption on brightness constancy, which only partially describes the dynamics one may encounter in the real world, and thus in dynamic textures. In response, Derpanis \etal \cite{derpanis2012spacetime} showed that the constituent
+A significant limitation of optical flow is its reliance on a single coherent movement for each pixel and its underlying assumption on brightness constancy, which only partially describes the dynamics one may encounter in the real world, and thus in dynamic textures. In response, Derpanis and Wildes \cite{derpanis2012spacetime} showed that the constituent
 spacetime orientations for a spectrum of common
 visual patterns can serve as a basis for describing the temporal
 variation of an image sequence. Their observation motivated a motion oriented-energy approach to representing dynamics, rather than a flow-based approach. By constructing a set of 3D oriented filters designed to capture spacetime structures beyond just translational motion, they demonstrated a successful application of the approach for dynamic texture recognition \cite{derpanis2012spacetime}.
 
-Motion energy models may form an ideal basis for the dynamics stream of the proposed dynamic texture synthesis ConvNet. As such, the MSOE model proposed by Derpanis \etal \cite{derpanis2012spacetime} is used to motivate the network architecture.
+Motion energy models may form an ideal basis for the dynamics stream of the proposed dynamic texture synthesis ConvNet. As such, the MSOE model proposed by Derpanis and Wildes \cite{derpanis2012spacetime} is used to motivate the network architecture.
 
 \subsection{ConvNet architecture}
 
@@ -310,7 +310,7 @@ appearance and dynamics computed from two different textures, respectively.
 
 This chapter presented the technical approach of the proposed ConvNet for dynamic texture synthesis, including its various extensions. The ConvNet implemented a factored approach in separately modelling the appearance (\ie, spatial content) and dynamics information (\ie, temporal variation) of an input dynamic texture. It consisted of two main components: an appearance stream and a dynamics stream. Each stream consisted of a ConvNet whose activation correlations (\ie, Gram matrices) were used to characterize the dynamic texture. The appearance stream was an adaptation of the static texture model introduced by Gatys \etal \cite{gatys2015}. Here it was utilized by applying it independently to each frame of the dynamic texture, arriving at a purely appearance-wise description of it.
 
-Parallel to the appearance stream is the dynamics stream, which was designed for purely capturing texture dynamics while forgoing appearance. Dynamic textures exhibit complex temporal variations that can not be adequately modelled by optical flow alone. Thus, a novel ConvNet was proposed, taking inspiration from spacetime-oriented energy models \cite{derpanis2012spacetime,simoncelli1998} that can characterize temporal imagery beyond the capabilities of optical flow. Namely, the Marginalized Spatiotemporal Oriented Energies (MSOE) model introduced by Derpanis \etal \cite{derpanis2012spacetime} was adapted to a ConvNet, which was trained through the proxy task of predicting optical flow.
+Parallel to the appearance stream is the dynamics stream, which was designed for purely capturing texture dynamics while forgoing appearance. Dynamic textures exhibit complex temporal variations that can not be adequately modelled by optical flow alone. Thus, a novel ConvNet was proposed, taking inspiration from spacetime-oriented energy models \cite{derpanis2012spacetime,simoncelli1998} that can characterize temporal imagery beyond the capabilities of optical flow. Namely, the Marginalized Spatiotemporal Oriented Energies (MSOE) model introduced by Derpanis and Wildes \cite{derpanis2012spacetime} was adapted to a ConvNet, which was trained through the proxy task of predicting optical flow.
 
 Dynamic textures were synthesized by optimizing each stream's objective with respect to the synthesized texture. Both streams followed the objective of minimizing the distances between activation correlations of the synthesized dynamic texture and target dynamic texture.
 
