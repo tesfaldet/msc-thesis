@@ -1,5 +1,7 @@
 \chapter{Introduction}
 
+\section{\highlight{Motivation}}
+
 The natural world is rich in visual texture. While a precise definition of 
 texture remains to be found, most research consider it as visual patterns that 
 exhibit local variations while maintaining global homogeneity, as shown in Fig.\ \ref{fig:texture}.
@@ -22,7 +24,7 @@ of interest in human perception, computer vision, and computer graphics. In
 computer vision, studying the underlying statistics of textures allows us to gain 
 insight as to how these complex structures can be interpreted and how we may be 
 able to leverage this knowledge to inform certain vision-related tasks. Examples 
-of such tasks include shape-from-texture \cite{gibson1950perception}, texture 
+of such tasks include shape-from-texture \cite{gibson1950perception}, \highlight{material recognition \cite{dana1999,adelson2001},} texture 
 synthesis \cite{heeger1995pyramid}, and more recently, image style transfer 
 \cite{gatys2016image}. In terms of specific applications, 
 there are many in the creative-industry including, but not limited to, computer-generated imagery, digital painting, and image editing.
@@ -32,6 +34,8 @@ three-dimensional (3D) shape of an object from a 2D image by using texture as a
 cue. Gibson \cite{gibson1950perception} proposed the \emph{texture gradient} as 
 the primary basis of surface perception by humans. He conjectured that neighbouring areas on a textured surface are perceived differently only due to differences
 in surface orientation and distance from the observer.
+
+\highlight{Material recognition in computer vision involves recognizing material categories (\eg, fabric, water, and wood) from an image based on the visual appearance of surfaces. The visual appearance of a surface depends on several factors \cite{dana1999,adelson2001}, such as illumination, geometric structure at various scales, viewing direction, and surface reflectance properties (\eg, the Bidirectional Reflectance Distribution Function, or BRDF, see \cite{nayar1991}). Notably, texture can be useful for distinguishing materials. For example, wood and water each have unique texture that easily distinguishes the two. Dana \etal \cite{dana1999} introduced the Bidirectional Texture Function (BTF) and demonstrated that the visual appearance of materials can be characterized by measuring texture.}
 
 \input{fig_texture_synthesis}
 
@@ -73,7 +77,7 @@ is shown in Fig.\ \ref{fig:teaser}.
 \clearpage
 The proposed model is constructed from two ConvNets: an appearance stream and a dynamics stream,
 which have been pre-trained for object recognition
-and optical flow prediction, respectively.
+and optical flow \edit{prediction}{estimation}, respectively.
 Similar to previous work on spatial textures
 \cite{gatys2015,heeger1995pyramid,portilla2000parametric}, an input dynamic texture is summarized in terms of a set of
 spatiotemporal statistics of filter outputs from each stream.
@@ -116,5 +120,5 @@ The contributions of this work span both theory and application. Specifically, t
 	\item \textbf{Factored representation of appearance and dynamics}. First, theoretical insight into the characterization of dynamic textures is provided by building a novel factored representation of both appearance and dynamics. Qualitatively, the two-stream representation is effective in generating visually compelling, novel instances of a wide range of dynamic textures.
 	\item \textbf{Motion energy representation of dynamics via a ConvNet}. Second, for the representation of dynamics, a novel ConvNet based on a ``marginalized'' motion energy model \cite{derpanis2010role,derpanis2012spacetime} is constructed and trained on the proxy task of optical flow prediction. This representation of dynamics provides a substantial improvement to the quality of synthesized textures when compared to using optical flow directly.
 	\item \textbf{Dynamics style transfer}. Third, a novel form of style transfer is demonstrated, where the dynamics of a dynamic texture can be mixed with the spatial appearance of a different (static or dynamic) texture. This is enabled by the proposed factored representation.
-	\item \textbf{Quantitative evaluation via user study}. Finally, a quantitative evaluation on the limitations of the method is performed through the inclusion of a broad range of textures and an extensive user study. This analysis will provide insight for the types of characteristics of temporal imagery that may cause a breakdown of the proposed model. This may point to future work to address limitations of the proposed model.
+	\item \textbf{Quantitative evaluation via user study}. Finally, a quantitative evaluation on the limitations of the method is performed through the inclusion of a broad range of textures and an extensive user study. This analysis \edit{will provide}{provides} insight for the types of characteristics of temporal imagery that may cause a breakdown of the proposed model. \edit{This}{These insights} may point to future work to address limitations of the proposed model.
 \end{enumerate}

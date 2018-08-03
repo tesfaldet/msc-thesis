@@ -70,7 +70,7 @@ matrices, $T_\text{out}$ is the number of frames being generated in
 the output, and $\Vert \cdot \Vert_F$ is the Frobenius norm.
 Consistent with previous work \cite{gatys2015}, Gram matrices are computed on the
 following layers: 
-\emph{conv1\_1}, \emph{pool1}, \emph{pool2}, \emph{pool3}, and \emph{pool4}.
+\emph{conv1\_1}, \emph{pool1}, \emph{pool2}, \emph{pool3}, and \emph{pool4}. \highlight{Gatys \etal \cite{gatys2015} found these layers to provide visually-pleasing results for static texture synthesis after they systematically experimented with using other layers. They demonstrated that not all layers of the network are required for visually-pleasing results, so long as the chosen layers span a wide spectrum of receptive fields (\ie, using early, mid, and later layers of the network).}
 
 \section{Texture model: Dynamics stream}
 
@@ -112,16 +112,18 @@ variance (\ie, contrast normalization or ``instance normalization'' \cite{ulyano
 \begin{equation}
 	\mathbf{I}_N = \frac{\mathbf{I} - \mu}{\sigma + \epsilon}\ ,
 \end{equation}
-where $\mu$ is the average pixel value of the input pair, $\sigma$ is the standard deviation of the input pair, and $\epsilon$ is a small value to prevent dividing by zero.
+where $\mu$ is the average pixel value of the input pair, $\sigma$ is the standard deviation of the input pair, and $\epsilon$ is a small value \highlight{($1\mathrm{e}{-12}$)} to prevent dividing by zero.
 This step provides a level of invariance to overall brightness and contrast (\ie, global additive and
-multiplicative signal variations) as well as ease the training process of the ConvNet. In contrast, hand-crafted approaches (\eg, \cite{derpanis2012spacetime}) opt to normalize the filters instead. This is not the case with the filters learned by the ConvNet.
+multiplicative signal variations) as well as \edit{ease}{eases} the training process of the ConvNet \highlight{\cite{lecun1998}}. \edit{In contrast, hand-crafted approaches (\eg, \cite{derpanis2012spacetime}) opt to normalize the filters instead. This is not the case with the filters learned by the ConvNet at the first layer since the input is already normalized.}{}
 The first layer consists of a 3D convolution over the normalized input pair with a bank of 32 3D filters of size $2 \times 11 \times 11$
 ($\text{time} \times \text{height} \times \text{width}$), resulting in an output of spacetime oriented energy measurements:
 \begin{equation}
 	E_F(\mathbf{x}) = F * \mathbf{I}_N(\mathbf{x})\ ,
 \end{equation}
 where $E_F$ denotes the response of filter $F$ (of size $2 \times 11 \times 11$) after a convolution, $*$, centered about $\mathbf{x} \equiv (t, x, y)$.
-Next, a squaring activation function and $5 \times 5$
+\highlight{In handcrafted approaches (\eg, \cite{derpanis2012spacetime}), a bank of oriented 3D Gaussian third derivative filters is often used, which require only 10 orientations as a spanning basis. Moreover, these filters typically exceed a temporal extent of $T=2$ to capture a wider range of temporal frequencies. Here, however, an overcomplete bank of 32 \emph{learned} 3D filters with a temporal extent of $T=2$ is used. This is done for a couple of reasons. First, an overcomplete filter bank ensures the network has the capacity to learn the required set of 3D oriented filters. Second, due to GPU memory limitations, the temporal extent of filters are limited to the temporal extent common for optical flow groundtruth imagery, $T=2$. Although this limits the range of temporal frequencies that can be captured in dynamic textures, it is still effective in enabling dynamic texture synthesis with dynamic textures spanning a wide range of dynamics, as shown in the next chapter.}
+
+\edit{Next}{After computing spacetime oriented energy measurements}, a squaring activation function and $5 \times 5$
 spatial max-pooling (with a stride of one) is applied to
 make the responses robust to local signal phase:
 \begin{equation}
@@ -130,7 +132,7 @@ make the responses robust to local signal phase:
 where $\Omega$ is a $5 \times 5$ spatial neighbourhood centered about $\mathbf{x}$.
 A 2D convolution follows with 64 filters of size $1 \times 1$ that combines
 energy measurements that are consistent
-with the same orientation:
+with the same \edit{orientation}{frequency domain plane}:
 \begin{equation}
 	E_G(\mathbf{x}) = G * \bar{E}_F(\mathbf{x})\ ,
 \end{equation}
@@ -140,7 +142,7 @@ $\text{L}_1$ divisive normalization is applied to each spatial location:
 \begin{equation}
 	\bar{E}_G(\mathbf{x}) = \frac{E_G(\mathbf{x})}{\Vert E_G(\mathbf{x}) \Vert_1 + \epsilon}\ ,
 \end{equation}
-where $\Vert \cdot \Vert_1$ is the $\text{L}_1$ norm computed over the filter responses of all filters.
+where $\Vert \cdot \Vert_1$ is the $\text{L}_1$ norm computed over the filter responses of all filters \highlight{and $\epsilon$ is a small value ($1\mathrm{e}{-12}$) to prevent dividing by zero}.
 
 To capture spacetime orientations beyond those capable
 with the limited receptive fields used in the initial
@@ -185,13 +187,15 @@ flow groundtruth for training,
 For the unlabeled video dataset, the UCF101
 dataset for action recognition \cite{soomro2012ucf101} is used as it contains a wide variety of complex movements of natural imagery. The synthetic Flying Chairs dataset \cite{dosovitskiy2015} was also considered as it contained ground truth optical flow; however, training the dynamics stream on this dataset reduced the overall quality of synthesized dynamic textures. This can be explained by the limited motions and appearances exhibited by the rigid objects in Flying Chairs, which is undesirable for estimating motion of dynamic textures.
 For producing the optical flow groundtruth, the EpicFlow \cite{revaud2015epicflow} model is used for 
-its state-of-the-art performance (at the time of experimentation) on optical flow prediction.
+its state-of-the-art performance (at the time of experimentation) on optical flow \edit{prediction}{estimation}.
 
 The distribution of movement directions in UCF101 is biased to left-to-right and right-to-left motions, which is undesirable as dynamic textures are not necessarily restricted to certain directions of motion. To combat this dataset bias, geometric data augmentations similar to those used by FlowNet \cite{dosovitskiy2015} are used to equalize the distribution of movement directions in the generated dataset. Additionally, photometric data augmentations similar to those used by FlowNet \cite{dosovitskiy2015} are used here as well. These augmentations include an image rotation with a rotation amount uniformly sampled from the range $[-180 \degree , 180 \degree]$; left-right and up-down flipping with a $50\%$ chance; additive gaussian noise with a sigma uniformly sampled from the range $[0, 0.04*255]$; gamma correction with a gamma value uniformly sampled from the range $[0.7, 1.5]$; additive brightness change with the additive value normally sampled from the distribution $\mathcal{N}(\mu = 0, \sigma = 0.2*255)$; and a multiplicative brightness change with the multiplicative value uniformly sampled from the range $[0.2, 1.4]$. Each of these augmentations are done in random order.
 The aEPE loss is optimized using Adam \cite{kingma2017}.
-Inspection of the learned filters in the initial layer of the encoding stage
+
+\highlight{Optical flow is chosen as the proxy task (as opposed to dynamic texture recognition \cite{derpanis2012spacetime}) for learning the distributed representation of dynamics (\ie, the first layer filters) because of the ease of obtaining large amounts of optical flow groundtruth for training. Although optical flow is not a suitable representation of the dynamics in dynamic textures, it is sufficient enough to induce the encoding stage to learn a bank of spacetime-oriented filters as the first layer of filters.}
+\highlight{Furthermore,} inspection of the learned filters in the initial layer of the encoding stage
 showed evidence of spacetime-oriented filters, consistent with
-the handcrafted filters used in previous work \cite{derpanis2012spacetime}. This is illustrated in Fig.\ \ref{fig:filters}.
+the handcrafted filters used in previous work \cite{derpanis2012spacetime}. This \highlight{point} is illustrated in Fig.\ \ref{fig:filters}.
 
 \input{fig_filters}
 
@@ -252,7 +256,7 @@ and the dynamics loss, Eq.\ (\ref{eq:dynloss}):
    \mathcal{L}_\text{dynamic texture} = \alpha\mathcal{L}_\text{appearance} + \beta \mathcal{L}_\text{dynamics}\ , \label{eq:dyntexloss}
 \end{equation}
 where $\alpha$ and $\beta$ are the weighting factors for the
-appearance and dynamics content, respectively.
+appearance and dynamics content, respectively. \highlight{They are set to $1\mathrm{e}{9}$ and $1\mathrm{e}{15}$, respectively.}
 Dynamic textures are implicitly defined as the (local) minima 
 of this loss.
 Textures are generated by optimizing Eq.\ 
@@ -266,20 +270,20 @@ Consistent with previous work \cite{gatys2015}, L-BFGS \cite{liu1989} is used fo
 
 Naive application of the outlined approach will consume
 increasing amounts of memory (in this case, GPU memory) used by the ConvNet as the temporal extent (\ie, number of frames) of the 
-dynamic texture grows; this makes it impractical to process and generate longer sequences.
+dynamic texture grows; this \highlight{fact} makes it impractical to process and generate longer sequences.
 Instead, long sequences can be incrementally generated by
 separating the sequence into subsequences and optimizing them 
 sequentially. Fig.\ \ref{fig:incremental_synthesis}
 shows a visualization of the incremental texture synthesis process.
 
-This is realized by initializing the first frame of a subsequence as the last 
+This \highlight{process} is realized by initializing the first frame of a subsequence as the last 
 frame from the previous subsequence and keeping it fixed throughout
 the optimization.
 The remaining frames of the subsequence are initialized randomly and
 optimized as above.
-This ensures temporal consistency across synthesized subsequences
+This \highlight{approach} ensures temporal consistency across synthesized subsequences
 and can be viewed as a form of coordinate descent for the full
-sequence objective. This can also be viewed as a form of non-linear autoregression where the output variable (in this case, the current subsequence) non-linearly depends on its previous values (previously synthesized subsequence) and a stochastic term (randomly initialized frames of the current subsequence).
+sequence objective. \highlight{Specifically, each subsequence can be viewed as a coordinate/direction of the full sequence objective that is to be minimized over, while keeping the other coordinates (\ie, other subsequences) fixed.} This \highlight{approach} can also be viewed as a form of non-linear autoregression where the output variable (in this case, the current subsequence) non-linearly depends on its previous values (previously synthesized subsequence) and a stochastic term (randomly initialized frames of the current subsequence).
 The flexibility of this framework allows other texture generation
 problems to be handled simply by altering the 
 initialization of frames and controlling which
@@ -300,9 +304,9 @@ The underlying assumption of the proposed model is that the appearance
 and dynamics of dynamic textures can be factorized.
 As such, it should allow for the transfer of the dynamics of
 one texture onto the appearance of another.
-This has been explored previously for image style transfer
+This \highlight{operation} has been explored previously for image style transfer
 \cite{champandard2016,gatys2017} with static imagery.
-This is accomplished with the proposed model by performing the same 
+\edit{This}{The operation} is accomplished with the proposed model by performing the same 
 optimization as described in Sec.\ \ref{sec:texgen}, but with the target Gram matrices for 
 appearance and dynamics computed from two different textures, respectively.
 
