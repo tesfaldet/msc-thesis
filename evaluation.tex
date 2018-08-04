@@ -13,7 +13,7 @@ The two-stream architecture was implemented using TensorFlow
 Results were synthesized using an NVIDIA Titan X (Pascal) GPU
 and synthesis times ranged between one to three hours (corresponding to $6,000$ optimization iterations)
 to generate $12$ frames with an image resolution of 
-$256 \times 256$.
+$256 \times 256$. The parameters of the dynamics stream were set as follows: $\alpha = 1\mathrm{e}{9}$, $\beta = 1\mathrm{e}{15}$, $\epsilon = 1\mathrm{e}{-12}$, and $\eta = 1\mathrm{e}{-12}$.
 For the full synthesis results and source code, please refer to the
 supplemental material available on the project page.
 
@@ -38,11 +38,11 @@ the results.
 
 Figure \ref{fig:successes_1} and Fig.\ \ref{fig:successes_2} show some example success cases with the
 two-stream method where appearance and dynamics characteristics from the
-target are reliably preserved in the synthesized result. \edit{The}{For example, the}
+target are reliably preserved in the synthesized result. For example, the
 upward fiery dynamics and flickering appearance of \path{fireplace_1}, the outward dynamics of the explosive splash of \path{lava},
 the wispy fluid dynamics of \path{smoke_1}, the
 flowing vegetation in \path{underwater_vegetation_1}, and the downward 
-rippling flow of \path{water_3}\highlight{, are all captured in the synthesized results.}
+rippling flow of \path{water_3}, are all captured in the synthesized results.
 
 \clearpage
 \input{fig_successes_1}
@@ -183,7 +183,7 @@ details of the user study.
 
 For comparison, a baseline was constructed by using the 
 flow decode layer in the dynamics loss of Eq.\ \ref{eq:dynloss}.
-This \highlight{approach} corresponds with attempting to mimic the optical flow 
+This approach corresponds with attempting to mimic the optical flow 
 statistics of the texture directly.
 Textures were synthesized with this model and the user study
 was repeated with an additional 200 users.
@@ -231,8 +231,7 @@ irregular (\eg, a field of flowers), or
 stochastic/near-stochastic (\eg, tv static or water).
 For dynamics, the textures were grouped as either 
 spatially-consistent (\eg, closeup of rippling sea water) or 
-spatially-inconsistent (\eg, \edit{rippling sea water juxtaposed 
-with translating clouds in the sky}{rippling sea water viewed at an angle, causing inconsistent dynamics due to perspective distortion}). \highlight{The finer-grained dynamics taxonomy presented by Derpanis and Wildes \cite{derpanis2012spacetime} was not used here in its entirety because certain categories of dynamics were under-represented in the database of collected dynamic textures, \eg, unconstrained and underconstrained dynamics. Furthermore, there were dynamic textures that were difficult to categorize under their taxonomy (\ie, dynamic textures with inconsistent dynamics). To maintain statistically-meaningful results, the dominant, multi-dominant, heterogeneous, and isotropic dynamics groups of Derpanis and Wildes \cite{derpanis2012spacetime} were merged into the spatially-consistent group, covering roughly half of the collected dynamic textures, and the spatially-inconsistent group was created to cover the rest.}
+spatially-inconsistent (\eg, rippling sea water viewed at an angle, causing inconsistent dynamics due to perspective distortion). The finer-grained dynamics taxonomy presented by Derpanis and Wildes \cite{derpanis2012spacetime} was not used here in its entirety because certain categories of dynamics were under-represented in the database of collected dynamic textures, \eg, unconstrained and underconstrained dynamics. Furthermore, there were dynamic textures that were difficult to categorize under their taxonomy (\ie, dynamic textures with inconsistent dynamics). To maintain statistically-meaningful results, the dominant, multi-dominant, heterogeneous, and isotropic dynamics groups of Derpanis and Wildes \cite{derpanis2012spacetime} were merged into the spatially-consistent group, covering roughly half of the collected dynamic textures, and the spatially-inconsistent group was created to cover the rest.
 Results based on these groupings can be seen in
 Fig.\ \ref{fig:pairwise_grouped}.
 
@@ -250,7 +249,7 @@ and irregular textures) tend to perform poorly.
 Examples being \path{flag} and \path{fountain_2} with
 user accuracies of $98.9\% \pm 1.6\%$ and $90.8\% \pm 4.3\%$ 
 averaged across all exposures, respectively.
-This \highlight{result} is not unexpected and is a fundamental limitation of the 
+This result is not unexpected and is a fundamental limitation of the 
 local nature of the Gram matrix representation used in the 
 appearance stream which was observed in static texture synthesis 
 \cite{gatys2015}.
@@ -282,7 +281,7 @@ of spatially-consistent dynamics.
 However, as the appearance shifts from containing small-scale 
 spatial consistencies to containing large-scale spatial consistencies,
 performance degrades.
-This \highlight{pattern} was evident in the user study where the best-performing 
+This pattern was evident in the user study where the best-performing 
 textures typically consisted of a stochastic or
 near-stochastic appearance with spatially-consistent 
 dynamics.
@@ -304,9 +303,7 @@ Their results on these sequences (\path{cranberries}, \path{flames},
 \path{leaves}, and \path{water_5}) are included in the folder
 \path{funke} under \path{dynamic_texture_synthesis/comparisons} in the supplementary material. The results from the two-stream model are included as well. An example on the \path{leaves} sequence is shown in Fig.\ \ref{fig:funke_comparison}.
 
-\clearpage
 \input{fig_funke_comparison}
-\clearpage
 
 Results are also compared on nine dynamic textures chosen to cover the full
 range of the dynamics and appearance groupings introduced in the user study.
@@ -343,7 +340,7 @@ note that their method appears to not be able to synthesize novel dynamic textur
 appears to faithfully reproduce the target texture, reducing the generalizability (\eg, synthesis of textures beyond the spatiotemporal extent of the input) of their approach, and thus its applicability.
  
 As a consequence of jointly modelling appearance and dynamics, both methods \cite{funke2017,xie2017synthesizing} are not capable of the novel form of style
-transfer that was demonstrated above. This \highlight{capability} was enabled by the factored
+transfer that was demonstrated above. This capability was enabled by the factored
 representation of dynamics and appearance. Furthermore, the spatiotemporal
 extent of the output sequence generated by Xie \etal's
 \cite{xie2017synthesizing} method is limited to being equal to the input.
@@ -354,6 +351,6 @@ The proposed approach does not share this limitation.
 This chapter provided a qualitative analysis on a variety of results obtained using the proposed two-stream model for dynamic texture synthesis, incremental texture synthesis, temporally-endless texture synthesis, and dynamics style transfer. For dynamic texture synthesis, it was shown that both the appearance and dynamics streams were required to synthesize dynamic textures that matched both the framewise appearance of the target and its dynamics. For incremental texture synthesis, it was shown that incrementally synthesized dynamic textures exhibited no divergence or degradation when compared to those synthesized using the typical batch process. For temporally-endless texture synthesis, it was shown that the synthesized dynamic textures exhibited no apparent temporal discontinuity between the last and first frames. For dynamics style transfer, it was shown that the dynamics of one dynamic texture can be successfully combined with the appearance of another, under the stipulation that the appearance and dynamics targets came from textures similar in scale and semantics.
 
 Additionally, a large-scale user study was performed to quantitatively evaluate the realism of dynamic textures synthesized by the proposed model by comparing synthesized results with their respective targets. An evaluation on a baseline version of the model was performed as well. Overall, dynamic textures synthesized by the two-stream model were able to fool users $33.9\% \pm 2.5\%$ of the time for brief exposures. In contrast, dynamic textures synthesized by the baseline model were able to fool users $10.2\% \pm 1.8\%$ of the time. 
-\highlight{Although the final two-stream model was statistically better than the baseline model, users were still able to reliably tell the difference between real and synthesized for longer exposure times. It is possible that for longer exposure times, spatial artifacts (\eg, chromatic aberration and noise) of the synthesized texture may have served as cues for distinguishing between real and synthesized. These artifacts suggest room for improvement on the representation of appearance and has been left for future work.}
+Although the final two-stream model was statistically better than the baseline model, users were still able to reliably tell the difference between real and synthesized for longer exposure times. Specifically, $79.6\% \pm 1.1\%$ of the time, they could distinguish real from synthesized when exposure times were 1.2 seconds or higher. It is possible that for longer exposure times, spatial artifacts (\eg, chromatic aberration and noise) of the synthesized texture may have served as cues for distinguishing between real and synthesized. These artifacts suggest room for improvement on the representation of appearance and has been left for future work.
 
-Finally, a qualitative comparison with two extant methods for dynamic texture synthesis was performed. Overall, the results from the proposed two-stream model were shown to be qualitatively better than the compared methods, showing more temporal coherence and similarity in dynamics as well as fewer spatial and temporal artifacts. Furthermore, \edit{the other methods were shown to lack the capability of the novel dynamics style transfer shown by the proposed two-stream model}{it is unclear how the other methods can be applied to the novel dynamics style transfer, as can the proposed two-stream model}.
+Finally, a qualitative comparison with two extant methods for dynamic texture synthesis was performed. Overall, the results from the proposed two-stream model were shown to be qualitatively better than the compared methods, showing more temporal coherence and similarity in dynamics as well as fewer spatial and temporal artifacts. Furthermore, it is unclear how the other methods can be applied to the novel dynamics style transfer, as can the proposed two-stream model.
